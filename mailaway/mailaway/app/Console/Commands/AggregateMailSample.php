@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Providers\AggregateMailerService;
+use MailModel;
+use ContactModel;
 
 class AggregateMailSample extends Command
 {
@@ -38,7 +40,18 @@ class AggregateMailSample extends Command
      */
     public function handle(AggregateMailerService $service)
     {
-        $success = $service->sample();
+        $mail = new MailModel();
+        $mail->title = 'Sample Mail';
+        $mail->from = new ContactModel();
+        $mail->from->name = 'Mailaway Service';
+        $mail->from->email = 'itckoenig@gmail.com';
+        $mail->to = [];
+        $mail->to[] = new ContactModel();
+        $mail->to[0]->name = 'Christian';
+        $mail->to[0]->email = 'itckoenig@gmail.com';
+        $mail->body_txt = 'Sample Email Content';
+        $mail->body_html = '<h1>Yay</h1> It works';
+        $success = $service->sample($mail);
         $message = $success ? "mail sent": "mail not sent!";
         $this->info($message);
     }

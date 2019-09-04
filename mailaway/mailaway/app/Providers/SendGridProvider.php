@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use MailModel;
 
 //@todo how to move service class & interface away from this file?
 class SendgridMailer
@@ -10,16 +11,16 @@ class SendgridMailer
 
     public $name = 'Sendgrid';
 
-    public function sample()
+    public function sample(MailModel $mail)
     {
         $email = new \SendGrid\Mail\Mail();
-        $email->setFrom("itckoenig@gmail.com", "Mailaway Service");
-        $email->setSubject("Sending with Twilio SendGrid is Fun");
-        $email->addTo("itckoenig@gmail.com", "Example User");
-        $email->addContent("text/plain", "and easy to do anywhere, even with PHP");
-        $email->addContent(
-            "text/html", "<strong>and easy to do anywhere, even with PHP</strong>"
-        );
+        $email->setFrom($mail->from->email, $mail->from->name);
+        $email->setSubject($mail->title);
+        foreach ($mail->to as $to) {
+            $email->addTo($to->email, $to->name);
+        }
+        $email->addContent("text/plain", $mail->body_txt);
+        $email->addContent("text/html", $mail->body_html);
         $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
         try {
             $response = $sendgrid->send($email);

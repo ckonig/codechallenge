@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Mailjet\LaravelMailjet\Facades\Mailjet;
+use MailModel;
 use \Mailjet\Resources;
 
 //@todo how to move service class & interface away from this file?
@@ -12,23 +13,24 @@ class MailjetMailer
 
     public $name = 'Mailjet';
 
-    public function sample()
+    public function sample(MailModel $mail)
     {
+        $message = [];
+        $message['Subject'] = $mail->title;
+        $message['FromEmail'] = $mail->from->email;
+        $message['FromName'] = $mail->from->name;
+        $message['Recipients'] = [];
+        foreach ($mail->to as $to) {
+            $recipient = [];
+            $recipient['Email'] = $to->email;
+            $recipient['Name'] = $to->name;
+            $message['Recipients'][] = $recipient;
+        }
+        $message['Text-Part'] = $mail->body_txt;
+        $message['HTML-Part'] = $mail->body_html;
         $body = [
             'Messages' => [
-                [
-                    'FromEmail' => "itckoenig@gmail.com",
-                    'FromName' => "Mailaway Service",
-                    'Recipients' => [
-                        [
-                            'Email' => "itckoenig@mail.com",
-                        ],
-                    ],
-                    'Subject' => "Greetings from Mailjet.",
-                    'TextPart' => "My first Mailjet email",
-                    'HTMLPart' => "<h3>Dear passenger 1, welcome to <a href='https://www.mailjet.com/'>Mailjet</a>!</h3><br />May the delivery force be with you!",
-                    'CustomID' => "AppGettingStartedTest",
-                ],
+                $message,
             ],
         ];
         $response = Mailjet::post(Resources::$Email, ['body' => $body]);
