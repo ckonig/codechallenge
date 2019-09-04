@@ -177,6 +177,7 @@ return [
         App\Providers\HelloWorldProvider::class,
         App\Providers\MailjetProvider::class,
         App\Providers\SendgridProvider::class,
+        App\Providers\AggregateMailerProvider::class,
 
         /*
          * Mailjet Service Providers...

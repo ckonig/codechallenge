@@ -4,10 +4,12 @@
 
 - [OK] Create HelloWorld app using Docker & Laradock
 - [OK] Create Json controller & ClI app for same HelloWorld service
-- Design & implement a basic, stubbed external interfaces (web&cli) for email service
+- [OK] Write sample mailers for SendGrid & MailJet
+- Make mailers reusable by extracting the sample data and making it parametrized
+- [OK] Implement AggregateMailer wrapping the common interface for the two mailers
+- Make Aggregatemailer do the retry & fallback parts & logging
 - Find out how to deal best with domain/view/persistence models (e.g. mail class holding all mail attributes), think about automatic controller input validation
-- Write mailers for SendGrid & MailJet
-- Implement AggregateMailer that will do the retry & fallback parts
+- Design & implement a basic, stubbed external interfaces (web&cli) for email service
 - Connect controller & mailer directly. Manually test the synchronous mail app from both interfaces.
 - Look into logging solution(s)
 - Add database, generate IDs for mails. Allow checking email status by ID via web interface.
