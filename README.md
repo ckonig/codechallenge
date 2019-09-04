@@ -12,6 +12,7 @@
 - [x] Design & implement a basic, stubbed external interfaces (web&cli) for email service
 - [x] Connect controller & mailer directly. Manually test the synchronous mail app from both interfaces.
 - [x] Remove HelloWorld remnants
+- [ ] Update static CLI mail command to take input from console (or file?)
 - [ ] Make AggregateMailer do the retry & fallback parts
 - [ ] Add database, generate IDs for mails. Allow checking email status by ID via web interface.
 - [ ] Look at the listener tech that is already built in to laravel app, what can it do for us?
@@ -24,7 +25,7 @@
 
 - Make informed choice about Command implementation in Command class vs. Closure based command implementation.
 - How simple can Dependency Injection be, and how complex should it be? Do I need providers?
-- Find out how to put environment config under version control.
+- Find out how to put environment config under version control - currently it's just on local laradock git submodule.
 - Find proper way to deal with secrets.
 
 ## Choices & Revisions
@@ -52,3 +53,35 @@ There is also a SendGrid connector that directly ties into the Laravel Mailer, b
 
 I wasn't familiar with Artisan before, so in the initial planning I was unsure how to approach the requirement that the functionality of the microservice needs to be accessible through command line. After becoming more familiar with Laravel and it's possibilities, implementing the CLI commands for Artisan seemed the logical thing to do.
 
+## Setup
+
+```cli
+git clone https://github.com/ckonig/codechallenge
+cd codechallenge
+git submodule init
+git submodule update
+cd laradock
+
+//@todo magic to restore .env config
+
+docker-compose up -d nginx mysql
+```
+
+## Manual testing
+
+### JSON API
+
+There is a Postman collection in this repository (root/postman) that can be used to test the JSON API manually.
+
+Following requests can be made with this collection:
+
+- POST /api/mail (to send an email defined in the request body)
+
+### Console
+
+To send a (static) sample mail, you can use the sample Artisan command
+
+```cli
+docker-compose exec workspace bash // connect to bash in workspace
+php artisan aggregatemailsample
+```

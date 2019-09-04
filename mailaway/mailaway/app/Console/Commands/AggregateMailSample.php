@@ -40,6 +40,8 @@ class AggregateMailSample extends Command
      */
     public function handle(AggregateMailer $service)
     {
+        //@todo rewrite to use console input instead of static content!
+
         $mail = new MailModel();
         $mail->title = 'Sample Mail';
         $mail->from = new ContactModel();

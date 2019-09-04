@@ -1,0 +1,44 @@
+{
+	"info": {
+		"_postman_id": "04cb4038-5dd2-4cb2-aa13-5471c7b41573",
+		"name": "CodeChallenge",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "localhost/api/mail",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"Sent from Postman via Mailaway\",\n\t\"body_txt\": \"You have received an email from the Mailaway service\",\n\t\"body_html\": \"<h1> YAY </h1> Mailaway works fine\",\n\t\"from\" : {\n\t\t\"name\": \"Mailaway Service\",\n\t\t\"email\": \"noreply@mailaway.com\"\n\t},\n\t\"to\": [\n\t\t{\n\t\t\t\"name\": \"Christian koenig\",\n\t\t\t\"email\": \"itckoenig@gmail.com\"\n\t\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "localhost/api/mail",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"mail"
+					]
+				},
+				"description": "Send an email "
+			},
+			"response": []
+		}
+	]
+}
