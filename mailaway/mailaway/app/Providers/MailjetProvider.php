@@ -22,7 +22,7 @@ class MailjetMailer {
             ]
           ];
         $response = Mailjet::post(Resources::$Email, ['body'=> $body]);
-        return print_r($response, true);
+        return $response->success();
     }
 }
 
