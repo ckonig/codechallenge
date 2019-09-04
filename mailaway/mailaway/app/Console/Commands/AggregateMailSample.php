@@ -38,6 +38,8 @@ class AggregateMailSample extends Command
      */
     public function handle(AggregateMailerService $service)
     {
-        $this->info($service->sample());
+        $success = $service->sample();
+        $message = $success ? "mail sent": "mail not sent!";
+        $this->info($message);
     }
 }

@@ -5,8 +5,13 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 
 //@todo how to move service class & interface away from this file?
-class SendgridMailer {
-    public function sample() {
+class SendgridMailer
+{
+
+    public $name = 'Sendgrid';
+
+    public function sample()
+    {
         $email = new \SendGrid\Mail\Mail();
         $email->setFrom("itckoenig@gmail.com", "Example User");
         $email->setSubject("Sending with Twilio SendGrid is Fun");
@@ -20,7 +25,7 @@ class SendgridMailer {
             $response = $sendgrid->send($email);
             return $response->statusCode() == 202;
         } catch (Exception $e) {
-            echo 'Caught exception: '. $e->getMessage() ."\n";
+            echo 'Caught exception: ' . $e->getMessage() . "\n";
             return false;
         }
     }
