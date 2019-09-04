@@ -176,6 +176,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\HelloWorldProvider::class,
         App\Providers\MailjetProvider::class,
+        App\Providers\SendgridProvider::class,
 
         /*
          * Mailjet Service Providers...
@@ -230,7 +231,6 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
         'Mailjet' => Mailjet\LaravelMailjet\Facades\Mailjet::class,
     ],
 
