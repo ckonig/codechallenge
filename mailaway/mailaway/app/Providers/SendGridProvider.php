@@ -13,7 +13,7 @@ class SendgridMailer
     public function sample()
     {
         $email = new \SendGrid\Mail\Mail();
-        $email->setFrom("itckoenig@gmail.com", "Example User");
+        $email->setFrom("itckoenig@gmail.com", "Mailaway Service");
         $email->setSubject("Sending with Twilio SendGrid is Fun");
         $email->addTo("itckoenig@gmail.com", "Example User");
         $email->addContent("text/plain", "and easy to do anywhere, even with PHP");
