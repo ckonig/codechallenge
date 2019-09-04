@@ -3,36 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Log;
-use MailModel;
-
-class AggregateMailerService
-{
-    public function __construct(MailjetMailer $mailjet, SendgridMailer $sendgrid)
-    {
-        $this->mailers = [$sendgrid, $mailjet];
-    }
-
-    public function sample(MailModel $mail)
-    {
-        //@todo retry strategy
-        //@todo backoff strategy
-        $success = false;
-        foreach ($this->mailers as $mailer) {
-            if (!$success) {
-                Log::info('attempt sending mail using ' . $mailer->name);
-                $success = $mailer->sample($mail);
-                if ($success) {
-                    Log::info('sent email successfully');
-                } else {
-                    Log::error('NOT successful using ' . $mailer->name);
-                }
-            }
-        }
-
-        return $success;
-    }
-}
+use App\Services\AggregateMailer;
 
 class AggregateMailerProvider extends ServiceProvider
 {
@@ -53,8 +24,8 @@ class AggregateMailerProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('AggregateMailerService', function ($app) {
-            return new AggregateMailerService();
+        $this->app->singleton('AggregateMailer', function ($app) {
+            return new AggregateMailer();
         });
     }
 }

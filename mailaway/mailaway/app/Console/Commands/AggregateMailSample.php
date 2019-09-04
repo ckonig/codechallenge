@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Providers\AggregateMailerService;
+use App\Services\AggregateMailer;
 use MailModel;
 use ContactModel;
 
@@ -38,7 +38,7 @@ class AggregateMailSample extends Command
      *
      * @return mixed
      */
-    public function handle(AggregateMailerService $service)
+    public function handle(AggregateMailer $service)
     {
         $mail = new MailModel();
         $mail->title = 'Sample Mail';

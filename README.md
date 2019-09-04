@@ -19,8 +19,7 @@
 - Look into vue.js frontend application
 - Look into traffic management & gateways for horizontal scaling of web endpoint
 
-## Additional tasks / improvements
+## Additional tasks / improvements / open questions
 
-- Find out how to properly split ServiceProvider and Service implementation into separate folders.
 - Make informed choice about Command implementation in Command class vs. Closure based command implementation.
 - Implement basic HTML view for HelloWorld web scenario
