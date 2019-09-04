@@ -15,4 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// @todo implement HelloWorld view
+
+Route::get('hello', 'HelloWorld@index');
+
+// @todo implement proper HelloWorld HTML view
