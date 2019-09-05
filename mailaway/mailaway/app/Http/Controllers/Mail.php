@@ -31,7 +31,7 @@ class Mail extends Controller
             $mail->to[] = $recipient;
         }
 
-        $result = $this->mailer->sample($mail);
+        $result = $this->mailer->sendMail($mail);
 
         // @todo handle result of mailing... which later represents "adding to queue"
         // the API user needs to know if this worked or not.

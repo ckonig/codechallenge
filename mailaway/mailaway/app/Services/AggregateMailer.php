@@ -2,17 +2,17 @@
 
 namespace App\Services;
 
-use MailModel;
 use Log;
+use MailModel;
 
 class AggregateMailer
 {
     public function __construct(MailjetMailer $mailjet, SendgridMailer $sendgrid)
     {
-        $this->mailers = [$sendgrid, $mailjet];
+        $this->mailers = [$mailjet, $sendgrid];
     }
 
-    public function sample(MailModel $mail)
+    public function sendMail(MailModel $mail)
     {
         //@todo retry strategy
         //@todo backoff strategy
@@ -20,11 +20,15 @@ class AggregateMailer
         foreach ($this->mailers as $mailer) {
             if (!$success) {
                 Log::info('attempt sending mail using ' . $mailer->name);
-                $success = $mailer->sample($mail);
-                if ($success) {
-                    Log::info('sent email successfully');
-                } else {
-                    Log::error('NOT successful using ' . $mailer->name);
+                try {
+                    $success = $mailer->sendMail($mail);
+                    if ($success) {
+                        Log::info('sent email successfully using ' . $mailer->name);
+                    } else {
+                        Log::error('sending email NOT successful using ' . $mailer->name);
+                    }
+                } catch (\Exception $ex) {
+                    Log::error('Sending email not successful using ' . $mailer->name . ', caught exception: ' . $ex->getMessage() . "\n");
                 }
             }
         }

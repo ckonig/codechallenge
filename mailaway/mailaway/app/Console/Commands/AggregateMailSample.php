@@ -53,7 +53,7 @@ class AggregateMailSample extends Command
         $mail->to[0]->email = 'itckoenig@gmail.com';
         $mail->body_txt = 'Sample Email Content';
         $mail->body_html = '<h1>Yay</h1> It works';
-        $success = $service->sample($mail);
+        $success = $service->sendMail($mail);
         $message = $success ? "mail sent": "mail not sent!";
         $this->info($message);
     }

@@ -174,9 +174,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\MailjetProvider::class,
-        App\Providers\SendgridProvider::class,
-        App\Providers\AggregateMailerProvider::class,
 
         /*
          * Mailjet Service Providers...
