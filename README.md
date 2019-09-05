@@ -60,9 +60,9 @@ git submodule init
 git submodule update
 
 //setup configuration
-cp .\mailaway\laradock.env .\laradock\.env
-cp .\mailaway\default.conf .\laradock\nginx\sites\default.conf
-cp .\mailaway\mailaway.env .\mailaway\.env
+cp .\mailaway\setup\laradock.env .\laradock\.env
+cp .\mailaway\setup\default.conf .\laradock\nginx\sites\default.conf
+cp .\mailaway\setup\mailaway.env .\mailaway\.env
 
 //start container and install dependencies
 cd laradock
@@ -74,9 +74,11 @@ composer install
 phpunit
 php artisan aggregatemailsample
 ```
+
 ## Automatic testing
 
-### Unit tests 
+### Unit tests
+
 To run the unit tests, connect to the bash of the workspace container, then run ```phpunit```
 
 ## Manual testing
