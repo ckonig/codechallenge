@@ -60,9 +60,9 @@ git submodule init
 git submodule update
 
 //setup configuration
-cp .\mailaway\mailaway\laradock.env .\laradock\.env
-cp .\mailaway\mailaway\default.conf .\laradock\nginx\sites\default.conf
-cp .\mailaway\mailaway\mailaway.env .\mailaway\mailaway\.env
+cp .\mailaway\laradock.env .\laradock\.env
+cp .\mailaway\default.conf .\laradock\nginx\sites\default.conf
+cp .\mailaway\mailaway.env .\mailaway\.env
 
 //start container and install dependencies
 cd laradock
