@@ -1,6 +1,6 @@
 # Code Challenge
 
-## initial plan of approach
+## initial plan of approach / status
 
 - [x] Create HelloWorld app using Docker & Laradock
 - [x] Create Json controller & ClI app for same HelloWorld service
@@ -12,18 +12,17 @@
 - [x] Design & implement a basic, stubbed external interfaces (web&cli) for email service
 - [x] Connect controller & mailer directly. Manually test the synchronous mail app from both interfaces.
 - [x] Remove HelloWorld remnants
-- [ ] Update static CLI mail command to take input from console (or file?)
-- [ ] Make AggregateMailer do the retry & fallback parts
-- [ ] Add database, generate IDs for mails. Allow checking email status by ID via web interface.
-- [ ] Look at the listener tech that is already built in to laravel app, what can it do for us?
-- [ ] Look into vertical scaling of background worker with regards to queue consumption, transaction safety.
+- [x] Update static CLI mail command to take input from console
+- [ ] Make AggregateMailer do the retry & backoff parts
+- [ ] Add database, generate IDs for every mail. Allow checking email status by ID via web / console interface.
 - [ ] Decide on queueing technology, add queue to the mix, split app into foreground & background application
+- [ ] Look into vertical scaling of background worker with regards to queue consumption, transaction safety.
 - [ ] Look into vue.js frontend application
 - [ ] Look into traffic management & gateways for horizontal scaling of web endpoint
 
 ## Important Issues
 
-- Find out how to deal with environment config and secrets. It's unacceptable to keep secrets under version control. 
+- Find out how to deal with environment config and secrets. It's unacceptable to keep secrets under version control.
 
 ## Choices & Revisions
 
@@ -50,6 +49,12 @@ There is also a SendGrid connector that directly ties into the Laravel Mailer, b
 
 I wasn't familiar with Artisan before, so in the initial planning I was unsure how to approach the requirement that the functionality of the microservice needs to be accessible through command line. After becoming more familiar with Laravel and it's possibilities, implementing the CLI commands for Artisan seemed the logical thing to do.
 
+This turned out to be beneficial since Artisan console commands are integrated very well in Laravel, which allowed easy customization of the command and even integration testing.
+
+### Dependency Injection
+
+There are multiple ways to implement Dependency Injection with Laravel. I decided to keep it as simple as possible by using the reflection approach without Service Providers or Contracts, until I end up in a situation where I *need* to go a more complicated route.
+
 ## Setup
 
 ```cli
@@ -64,26 +69,22 @@ cp .\mailaway\setup\laradock.env .\laradock\.env
 cp .\mailaway\setup\default.conf .\laradock\nginx\sites\default.conf
 cp .\mailaway\setup\mailaway.env .\mailaway\.env
 
-//start container and install dependencies
+//start container
 cd laradock
 docker-compose up -d nginx mysql
+
+//connect to workspace container and install dependencies
 docker-compose exec workspace bash
 composer install
-
-//verify app is working
-phpunit
-php artisan aggregatemailsample
 ```
 
-## Automatic testing
+## Testing
 
-### Unit tests
+### Automated tests
 
-To run the unit tests, connect to the bash of the workspace container, then run ```phpunit```
+To run the automated tests, connect to the bash of the workspace container, then run ```phpunit```
 
-## Manual testing
-
-### JSON API
+### Postman & JSON API
 
 There is a Postman collection in this repository (root/postman) that can be used to test the JSON API manually.
 
@@ -93,9 +94,9 @@ Following requests can be made with this collection:
 
 ### Console
 
-To send a (static) sample mail, you can use the sample Artisan command
+To send a mail from the console, you can use the following Artisan command.
 
 ```cli
-docker-compose exec workspace bash // connect to bash in workspace
-php artisan aggregatemailsample
+docker-compose exec workspace bash
+php artisan sendmail {senderName} {senderEmail} {subject} {txtContent} {htmlContent} {recipient(s)*}
 ```
