@@ -21,12 +21,9 @@
 - [ ] Look into vue.js frontend application
 - [ ] Look into traffic management & gateways for horizontal scaling of web endpoint
 
-## Additional tasks / improvements / open questions
+## Important Issues
 
-- Make informed choice about Command implementation in Command class vs. Closure based command implementation.
-- How simple can Dependency Injection be, and how complex should it be? Do I need providers?
-- Find out how to put environment config under version control - currently it's just on local laradock git submodule.
-- Find proper way to deal with secrets.
+- Find out how to deal with environment config and secrets. It's unacceptable to keep secrets under version control. 
 
 ## Choices & Revisions
 
@@ -56,16 +53,31 @@ I wasn't familiar with Artisan before, so in the initial planning I was unsure h
 ## Setup
 
 ```cli
+//get sources
 git clone https://github.com/ckonig/codechallenge
 cd codechallenge
 git submodule init
 git submodule update
+
+//setup configuration
+cp .\mailaway\mailaway\laradock.env .\laradock\.env
+cp .\mailaway\mailaway\default.conf .\laradock\nginx\sites\default.conf
+cp .\mailaway\mailaway\mailaway.env .\mailaway\mailaway\.env
+
+//start container and install dependencies
 cd laradock
-
-//@todo magic to restore .env config
-
 docker-compose up -d nginx mysql
+docker-compose exec workspace bash
+composer install
+
+//verify app is working
+phpunit
+php artisan aggregatemailsample
 ```
+## Automatic testing
+
+### Unit tests 
+To run the unit tests, connect to the bash of the workspace container, then run ```phpunit```
 
 ## Manual testing
 
