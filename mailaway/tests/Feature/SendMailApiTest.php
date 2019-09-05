@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 
-class SendMailTest extends TestCase
+class SendMailApiTest extends TestCase
 {
     private $data = [
         'title' => 'Sent from Feature test via Mailaway',
