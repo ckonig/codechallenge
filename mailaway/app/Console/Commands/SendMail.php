@@ -2,9 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\SendMailJob;
-use Illuminate\Console\Command;
 use App\Services\MailFrontendService;
+use Illuminate\Console\Command;
 
 class SendMail extends Command
 {
@@ -51,7 +50,7 @@ class SendMail extends Command
             $this->argument('fromName'),
             $this->argument('fromEmail'),
             $this->argument('title'),
-            array_map(function($item){ return ['name' => '', 'email' => $item]; }, $this->argument('toEmail')),
+            $this->argument('toEmail'),
             $this->argument('txt'),
             $this->argument('html')
         );

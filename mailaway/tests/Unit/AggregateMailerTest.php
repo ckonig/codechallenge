@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
+use App\Models\MailModel;
 use App\Services\AggregateMailer;
 use App\Services\MailjetMailer;
 use App\Services\SendgridMailer;
-use App\Models\MailModel;
 use Mockery;
 use Tests\TestCase;
 

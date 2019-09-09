@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\MailModel;
 use Mailjet\LaravelMailjet\Facades\Mailjet;
 use Mailjet\Resources;
-use App\Models\MailModel;
 
 class MailjetMailer
 {

@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use Log;
 use App\Models\MailModel;
+use Log;
 
 class AggregateMailer
 {

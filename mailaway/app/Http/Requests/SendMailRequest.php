@@ -24,12 +24,12 @@ class SendMailRequest extends FormRequest
     public function rules()
     {
         return [
-            'title'=>'required',
-            'body_txt'=>'required',
-            'body_html'=> 'required',
+            'title' => 'required',
+            'body_txt' => 'required',
+            'body_html' => 'required',
             'from.name' => 'required',
-            'from.email'=> 'required|email',
-            'to'=> 'required|array|min:1',
+            'from.email' => 'required|email',
+            'to' => 'required|array|min:1',
             'to*' => 'required|email',
         ];
     }

@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MailModel extends Model {
+class MailModel extends Model
+{
 
     protected $table = 'mails';
 
@@ -14,6 +15,6 @@ class MailModel extends Model {
         'fromEmail',
         'to',
         'body_txt',
-        'body_html'
+        'body_html',
     ];
 }

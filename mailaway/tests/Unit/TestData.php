@@ -1,10 +1,13 @@
 <?php
 
 namespace Tests\Unit;
+
 use App\Models\MailModel;
 
-class TestData {
-    public static function getMail() {
+class TestData
+{
+    public static function getMail()
+    {
         $mail = new MailModel();
         $mail->title = 'foo';
         $mail->body_txt = 'txt bar';
