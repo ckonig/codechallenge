@@ -22,7 +22,7 @@ class MailFrontendService
         $mail->save();
         SendMailJob::dispatch($mail)->onConnection('database')->delay(now()->addSeconds(1));
 
-        Log::info('Dispatched mail with ID ' . $mail->id);
+        Log::info('Dispatched mail with ID ' . $mail->id . ' to queue');
 
         return $mail;
     }
