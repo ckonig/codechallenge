@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
-class ContactModel {
+use Illuminate\Database\Eloquent\Model;
+
+class ContactModel extends Model {
     public $name;
     public $email;
 }

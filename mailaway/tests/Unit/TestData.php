@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 use App\Models\MailModel;
-use ContactModel;
+use App\Models\ContactModel;
 
 class TestData {
     public static function getMail() {

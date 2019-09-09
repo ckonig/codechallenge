@@ -37,5 +37,7 @@ class SendMailJob implements ShouldQueue
     public function handle(AggregateMailer $mailer)
     {
         $mailer->sendMail($this->mail);
+        $this->mail->status = 'sent';
+        $this->mail->save();
     }
 }

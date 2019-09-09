@@ -3,9 +3,10 @@
 namespace App\Console\Commands;
 
 use App\Jobs\SendMailJob;
-use ContactModel;
+use App\Models\ContactModel;
 use Illuminate\Console\Command;
 use App\Models\MailModel;
+use App\Services\MailFrontendService;
 
 class SendMail extends Command
 {
@@ -44,26 +45,19 @@ class SendMail extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(MailFrontendService $service)
     {
         //@todo how to test the completeness of the mapping of the arguments?
 
-        $mail = new MailModel();
-        $mail->title = $this->argument('title');
-        $mail->from = new ContactModel();
-        $mail->from->name = $this->argument('fromName');
-        $mail->from->email = $this->argument('fromEmail');
-        $mail->to = [];
-        $toEmails = $this->argument('toEmail');
-        foreach ($toEmails as $i => $email) {
-            $recipient = new ContactModel();
-            $recipient->email = $email;
-            $mail->to[] = $recipient;
-        }
+        $mail = $service->processMailRequest(
+            $this->argument('fromName'),
+            $this->argument('fromEmail'),
+            $this->argument('title'),
+            array_map(function($item){ return ['name' => '', 'email' => $item]; }, $this->argument('toEmail')),
+            $this->argument('txt'),
+            $this->argument('html')
+        );
 
-        $mail->body_txt = $this->argument('txt');
-        $mail->body_html = $this->argument('html');
-        SendMailJob::dispatch($mail);
         $success = true; //@todo generate & return ID
         $this->info($success ? "mail sent" : "mail not sent!");
         return $success ? 0 : 1;
