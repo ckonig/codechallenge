@@ -76,13 +76,28 @@ docker-compose up -d nginx mysql
 //connect to workspace container and install dependencies
 docker-compose exec workspace bash
 composer install
+
+//start the queue worker
+php artisan queue:work database
+```
+
+## Running the app
+
+```cli
+//start the queue worker in a separate terminal
+docker-compose exec workspace bash
+php artisan queue:work database
+
+//tail the logs in a separate terminal
+docker-compose exec workspace bash
+tail -f storage/logs/laravel-[current_date].log
 ```
 
 ## Testing
 
 ### Automated tests
 
-To run the automated tests, connect to the bash of the workspace container, then run ```phpunit```
+To run the automated tests, connect to the bash of the workspace container, then run ```phpunit```. Note: the queue worker needs to be running for the tests to pass.
 
 ### Postman & JSON API
 

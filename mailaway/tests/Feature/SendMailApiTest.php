@@ -19,7 +19,7 @@ class SendMailApiTest extends TestCase
         ],
     ];
 
-    public function testPostWithCompleteDataReturns200()
+    public function testHappyFlow()
     {
         $body = $this->data;
         $postresponse = $this->json('POST', '/api/mail', $body);
@@ -32,7 +32,13 @@ class SendMailApiTest extends TestCase
         $getresponse = $this->json('GET', '/api/mail/' . $id);
         $getresponse->assertStatus(200);
         $getcontent = json_decode($getresponse->getContent());
-        $this->assertEquals('sent', $getcontent->status);
+        $this->assertEquals('queued', $getcontent->status);
+
+        sleep(5);
+        $getresponse2 = $this->json('GET', '/api/mail/' . $id);
+        $getresponse2->assertStatus(200);
+        $getcontent2 = json_decode($getresponse2->getContent());
+        $this->assertEquals('sent', $getcontent2->status);
     }
 
     public function testPostWithMissingSubjectReturns422()
