@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Jobs\SendMailJob;
 use ContactModel;
 use Illuminate\Console\Command;
-use MailModel;
+use App\Models\MailModel;
 
 class SendMail extends Command
 {

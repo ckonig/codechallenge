@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use MailModel;
+use App\Models\MailModel;
 
 class MailjetMessageBuilder
 {

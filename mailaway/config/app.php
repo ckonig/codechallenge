@@ -229,8 +229,6 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Mailjet' => Mailjet\LaravelMailjet\Facades\Mailjet::class,
-        'MailModel'=> App\Models\MailModel::class,
-        'ContactModel'=> App\Models\ContactModel::class,
     ],
 
 ];

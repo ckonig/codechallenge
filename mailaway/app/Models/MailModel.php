@@ -2,12 +2,8 @@
 
 namespace App\Models;
 
-class ContactModel {
-    public $name;
-    public $email;
-}
-
 class MailModel {
+
     public $title;
     public $from;
     public $to;

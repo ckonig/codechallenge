@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use Log;
-use MailModel;
+use App\Models\MailModel;
 
 class AggregateMailer
 {

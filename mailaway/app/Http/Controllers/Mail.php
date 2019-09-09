@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\SendMailRequest;
 use App\Jobs\SendMailJob;
-use MailModel;
-use ContactModel;
+use App\Models\MailModel;
+use App\Models\ContactModel;
 use Log;
 
 class Mail extends Controller

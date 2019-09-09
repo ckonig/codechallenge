@@ -1,7 +1,7 @@
 <?php
 
 namespace Tests\Unit;
-use MailModel;
+use App\Models\MailModel;
 use ContactModel;
 
 class TestData {
