@@ -8,15 +8,9 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
     <body>
-        <header>
-            <h1>Mailaway</h1>
-        </header>
-        <section>
-            <div id="app">
-                <example-component></example-component>
-            </div>
-        </section>
-        <footer></footer>
+        <div id="app">
+            <app-root></app-root>
+        </div>
         <script src="/js/app.js"></script>
     </body>
 </html>

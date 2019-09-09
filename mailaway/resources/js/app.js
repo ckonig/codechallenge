@@ -6,6 +6,7 @@
  */
 
 require('./bootstrap');
+require('axios');
 
 window.Vue = require('vue');
 
@@ -17,10 +18,18 @@ window.Vue = require('vue');
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+ // const files = require.context('./', true, /\.vue$/i)
+ // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+ Vue.component('app-root', require('./components/AppRoot.vue').default);
+ Vue.component('send-mail-form', require('./components/SendMailForm.vue').default);
+ Vue.component('check-mail-form', require('./components/CheckMailForm.vue').default, {
+    methods:{
+        checkStatus: function() {
+            console.log('todo: check status');
+        }
+    }
+ });
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -29,5 +38,6 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
  */
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+
 });
