@@ -13,9 +13,9 @@
 - [x] Connect controller & mailer directly. Manually test the synchronous mail app from both interfaces.
 - [x] Remove HelloWorld remnants
 - [x] Update static CLI mail command to take input from console
-- [ ] Make AggregateMailer do the retry & backoff parts
-- [ ] Add database, generate IDs for every mail. Allow checking email status by ID via web / console interface.
-- [ ] Decide on queueing technology, add queue to the mix, split app into foreground & background application
+- [x] Make AggregateMailer do the retry & backoff parts
+- [x] Add database, generate IDs for every mail. Allow checking email status by ID via web / console interface and postman
+- [x] Decide on queueing technology, add queue to the mix, split app into foreground & background application
 - [ ] Look into vertical scaling of background worker with regards to queue consumption, transaction safety.
 - [ ] Look into vue.js frontend application
 - [ ] Look into traffic management & gateways for horizontal scaling of web endpoint
@@ -55,6 +55,12 @@ This turned out to be beneficial since Artisan console commands are integrated v
 
 There are multiple ways to implement Dependency Injection with Laravel. I decided to keep it as simple as possible by using the reflection approach without Service Providers or Contracts, until I end up in a situation where I *need* to go a more complicated route.
 
+### Queue & Data Storage
+
+MySql was relatively painless to setup, which also allowed to use the database driver for the Queue. Using the Eloquent ORM allows automatic generation / migration of the database. and relieves developers from writing SQL queries manually.
+
+The used data structure is as flat as possible, in fact there is only one entity called "MailModel". It contains a json encoded array for the receiver email addresses. This array is intentionally not designed as a separate entity to keep the performance high.
+
 ## Setup
 
 ```cli
@@ -76,9 +82,6 @@ docker-compose up -d nginx mysql
 //connect to workspace container and install dependencies
 docker-compose exec workspace bash
 composer install
-
-//start the queue worker
-php artisan queue:work database
 ```
 
 ## Running the app
@@ -97,7 +100,9 @@ tail -f storage/logs/laravel-[current_date].log
 
 ### Automated tests
 
-To run the automated tests, connect to the bash of the workspace container, then run ```phpunit```. Note: the queue worker needs to be running for the tests to pass.
+To run the automated tests, connect to the bash of the workspace container, then run ```phpunit```. 
+
+Note: the queue worker needs to be running for the tests to pass.
 
 ### Postman & JSON API
 
@@ -106,12 +111,17 @@ There is a Postman collection in this repository (root/postman) that can be used
 Following requests can be made with this collection:
 
 - POST /api/mail (to send an email defined in the request body)
+- GET /api/mail/{id} (to retrieve the status of a previously created email)
 
 ### Console
 
-To send a mail from the console, you can use the following Artisan command.
-
 ```cli
+//connect to workspace container
 docker-compose exec workspace bash
-php artisan sendmail {senderName} {senderEmail} {subject} {txtContent} {htmlContent} {recipient(s)*}
+
+//send an email
+php artisan mail:send {senderName} {senderEmail} {subject} {txtContent} {htmlContent} {recipient(s)*}
+
+//check status of an email
+php artisan mail:get {id}
 ```

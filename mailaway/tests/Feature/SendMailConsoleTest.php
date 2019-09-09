@@ -8,7 +8,7 @@ class SendMailConsoleTest extends TestCase
 {
     public function testConsole()
     {
-        $exitCode = $this->artisan('sendmail', [
+        $exitCode = $this->artisan('mail:send', [
             'fromName' => 'Christian',
             'fromEmail' => "itckoenig@gmail.com",
             'title' => "Console Stuff",

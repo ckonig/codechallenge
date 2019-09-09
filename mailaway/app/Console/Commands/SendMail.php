@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Jobs\SendMailJob;
 use Illuminate\Console\Command;
-use App\Models\MailModel;
 use App\Services\MailFrontendService;
 
 class SendMail extends Command
@@ -14,7 +13,7 @@ class SendMail extends Command
      *
      * @var string
      */
-    protected $signature = 'sendmail
+    protected $signature = 'mail:send
                             {fromName : Name of the sender}
                             {fromEmail : Email address of the sender}
                             {title : Subject line of the email}
@@ -58,7 +57,7 @@ class SendMail extends Command
         );
 
         $success = true; //@todo generate & return ID
-        $this->info($success ? "mail sent" : "mail not sent!");
+        $this->info($success ? ('mail #' . $mail->id . ' created, status: ' . $mail->status) : 'mail not sent!');
         return $success ? 0 : 1;
     }
 }

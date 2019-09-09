@@ -7,6 +7,24 @@
 	"item": [
 		{
 			"name": "localhost/api/mail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b8848df4-349a-4797-b5ca-847b20328a28",
+						"exec": [
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.globals.set(\"mailid\", pm.response.json().id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -24,7 +42,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"title\": \"Sent from Postman via Mailaway\",\n\t\"body_txt\": \"You have received an email from the Mailaway service\",\n\t\"body_html\": \"<h1> YAY </h1> Mailaway works fine\",\n\t\"from\" : {\n\t\t\"name\": \"Mailaway Service\",\n\t\t\"email\": \"noreply@mailaway.com\"\n\t},\n\t\"to\": [\n\t\t{\n\t\t\t\"name\": \"Christian koenig\",\n\t\t\t\"email\": \"itckoenig@gmail.com\"\n\t\t}\n\t]\n}"
+					"raw": "{\n\t\"title\": \"Sent from Postman via Mailaway\",\n\t\"body_txt\": \"You have received an email from the Mailaway service\",\n\t\"body_html\": \"<h1> YAY </h1> Mailaway works fine\",\n\t\"from\" : {\n\t\t\"name\": \"Mailaway Service\",\n\t\t\"email\": \"itckoenig@gmail.com\"\n\t},\n\t\"to\": [\n\t\t\"itckoenig@gmail.com\"\n\t]\n}"
 				},
 				"url": {
 					"raw": "localhost/api/mail",
@@ -37,6 +55,67 @@
 					]
 				},
 				"description": "Send an email "
+			},
+			"response": []
+		},
+		{
+			"name": "localhost/api/mail/{id}",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "118e78f0-cb67-4fb0-bc97-b78bdd8af4ae",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "42d9cc2b-0fc1-4b3c-b160-ad517f149c8d",
+						"exec": [
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"ID is same as in URL\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(pm.globals.get(\"mailid\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost/api/mail/{{mailid}}",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"mail",
+						"{{mailid}}"
+					]
+				}
 			},
 			"response": []
 		}

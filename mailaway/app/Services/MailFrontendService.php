@@ -20,10 +20,16 @@ class MailFrontendService
         ]);
 
         $mail->save();
+        $mail->refresh();
         SendMailJob::dispatch($mail)->onConnection('database')->delay(now()->addSeconds(1));
 
         Log::info('Dispatched mail with ID ' . $mail->id . ' to queue');
 
         return $mail;
+    }
+
+    public function retrieveMail($id)
+    {
+        return MailModel::find($id);
     }
 }
