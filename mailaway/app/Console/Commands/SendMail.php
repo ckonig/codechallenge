@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Services\AggregateMailer;
+use App\Jobs\SendMailJob;
 use ContactModel;
 use Illuminate\Console\Command;
 use MailModel;
@@ -44,7 +44,7 @@ class SendMail extends Command
      *
      * @return mixed
      */
-    public function handle(AggregateMailer $service)
+    public function handle()
     {
         //@todo how to test the completeness of the mapping of the arguments?
 
@@ -63,7 +63,8 @@ class SendMail extends Command
 
         $mail->body_txt = $this->argument('txt');
         $mail->body_html = $this->argument('html');
-        $success = $service->sendMail($mail);
+        SendMailJob::dispatch($mail);
+        $success = true; //@todo generate & return ID
         $this->info($success ? "mail sent" : "mail not sent!");
         return $success ? 0 : 1;
     }

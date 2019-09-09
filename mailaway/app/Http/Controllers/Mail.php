@@ -4,17 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\SendMailRequest;
-use App\Services\AggregateMailer;
+use App\Jobs\SendMailJob;
 use MailModel;
 use ContactModel;
 use Log;
 
 class Mail extends Controller
 {
-    public function __construct(AggregateMailer $mailer) {
-        $this->mailer = $mailer;
-    }
-
     public function sendMail(SendMailRequest $request) {
         $mail = new MailModel();
         $mail->title = $request->input('title');
@@ -31,10 +27,9 @@ class Mail extends Controller
             $mail->to[] = $recipient;
         }
 
-        $result = $this->mailer->sendMail($mail);
+        SendMailJob::dispatch($mail);
+        $result = true; //@todo generate & return ID
 
-        // @todo handle result of mailing... which later represents "adding to queue"
-        // the API user needs to know if this worked or not.
         Log::info($result);
 
         // @todo use proper HTTP status code
