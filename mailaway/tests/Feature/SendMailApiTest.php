@@ -35,10 +35,25 @@ class SendMailApiTest extends TestCase
         $this->assertEquals('queued', $getcontent->status);
 
         sleep(5);
+
         $getresponse2 = $this->json('GET', '/api/mail/' . $id);
         $getresponse2->assertStatus(200);
         $getcontent2 = json_decode($getresponse2->getContent());
+
         $this->assertEquals('sent', $getcontent2->status);
+        $this->assertEquals($id, $getcontent2->id);
+        $this->assertEquals($body['from']['name'], $getcontent2->fromName);
+        $this->assertEquals($body['from']['email'], $getcontent2->fromEmail);
+        $this->assertEquals($body['title'], $getcontent2->title);
+
+        //@todo this manual decoding looks wrong
+        $this->assertEquals($body['body_txt'], json_decode($getcontent2->body_txt));
+        $this->assertEquals($body['body_html'], json_decode($getcontent2->body_html));
+
+        $getresponse3 = $this->json('GET', '/api/mail/' . $id . '/status');
+        $getresponse3->assertStatus(200);
+        $getcontent3 = json_decode($getresponse3->getContent());
+        $this->assertEquals('sent', $getcontent3->status);
     }
 
     public function testPostWithMissingSubjectReturns422()

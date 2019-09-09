@@ -15,8 +15,8 @@ class MailFrontendService
             'fromName' => $fromName,
             'fromEmail' => $fromEmail,
             'to' => json_encode($recipients),
-            'body_txt' => json_encode($txt),
-            'body_html' => json_encode($html),
+            'body_txt' => json_encode($txt), //@todo why do we need to encode a string?
+            'body_html' => json_encode($html), //@todo why do we need to encode a string?
         ]);
 
         $mail->save();

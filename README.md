@@ -111,7 +111,8 @@ There is a Postman collection in this repository (root/postman) that can be used
 Following requests can be made with this collection:
 
 - POST /api/mail (to send an email defined in the request body)
-- GET /api/mail/{id} (to retrieve the status of a previously created email)
+- GET /api/mail/{id} (to retrieve a previously created email)
+- GET /api/mail/{id}/status (to retrieve the status of a previously created email)
 
 ### Console
 

@@ -72,8 +72,4 @@ class AggregateMailerTest extends TestCase
     {
         return $this->instance(SendgridMailer::class, Mockery::mock(SendgridMailer::class, $func));
     }
-
-    //@todo test logging
-    //@todo implement and test retry mechanism
-    //@todo implement and test backoff strategy
 }

@@ -33,6 +33,14 @@ class Mail extends Controller
         return response()->json([
             'id' => $id,
             'status' => $entity->status,
+            'attempt' => $entity->attempt,
         ]);
+    }
+
+    //@todo secure this endpoint or remove it
+    public function getMail(int $id)
+    {
+        $entity = $this->service->retrieveMail($id);
+        return response()->json($entity);
     }
 }

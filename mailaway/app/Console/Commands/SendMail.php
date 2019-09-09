@@ -7,11 +7,6 @@ use Illuminate\Console\Command;
 
 class SendMail extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'mail:send
                             {fromName : Name of the sender}
                             {fromEmail : Email address of the sender}
@@ -20,28 +15,8 @@ class SendMail extends Command
                             {html : HTML content for modern mail clients}
                             {toEmail* : Recipient(s) of the email. Multiple values are allowed.}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Send an email.';
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
     public function handle(MailFrontendService $service)
     {
         //@todo how to test the completeness of the mapping of the arguments?

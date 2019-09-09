@@ -17,23 +17,11 @@ class SendMailJob implements ShouldQueue
 
     private $mail;
 
-    /**
-     * Create a new job instance.
-     *
-     * @param MailModel $mail
-     * @return void
-     */
     public function __construct(MailModel $mail)
     {
         $this->mail = $mail;
     }
 
-    /**
-     * Execute the job.
-     *
-     * @param AggregateMailer $mailer
-     * @return void
-     */
     public function handle(AggregateMailer $mailer)
     {
         $this->mail->attempt++;
@@ -41,6 +29,7 @@ class SendMailJob implements ShouldQueue
         $result = $mailer->sendMail($this->mail);
 
         //@todo unit test retry & backoff behavior
+
         //@todo review backoff period increment and number of retries
 
         if ($result) {

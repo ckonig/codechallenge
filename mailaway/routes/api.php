@@ -18,4 +18,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('mail', 'Mail@sendMail');
-Route::get('mail/{id}', 'Mail@getMailStatus');
+Route::get('mail/{id}', 'Mail@getMail');
+Route::get('mail/{id}/status', 'Mail@getMailStatus');

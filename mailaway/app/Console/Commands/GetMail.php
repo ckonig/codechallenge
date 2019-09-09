@@ -11,11 +11,6 @@ class GetMail extends Command
 
     protected $description = 'Check the status of an email';
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function handle(MailFrontendService $service)
     {
         $id = $this->argument('id');
