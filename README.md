@@ -82,9 +82,13 @@ docker-compose up -d nginx mysql
 //connect to workspace container and install dependencies
 docker-compose exec workspace bash
 composer install
+
+//install npm dependencies & build UI
+yarn install
+yarn run dev
 ```
 
-## Running the app
+## Development / running the app
 
 ```cli
 //start the queue worker in a separate terminal
@@ -94,6 +98,9 @@ php artisan queue:work database
 //tail the logs in a separate terminal
 docker-compose exec workspace bash
 tail -f storage/logs/laravel-[current_date].log
+
+//rebuild vue.js components
+yarn run dev
 ```
 
 ## Testing
