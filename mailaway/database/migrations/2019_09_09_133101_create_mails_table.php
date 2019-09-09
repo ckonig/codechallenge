@@ -17,7 +17,8 @@ class CreateMailsTable extends Migration
             $table->increments('id');
             $table->string('status')->default('queued');
             $table->string('title');
-            $table->json('from');
+            $table->string('fromName');
+            $table->string('fromEmail');
             $table->json('to');
             $table->json('body_txt');
             $table->json('body_html');

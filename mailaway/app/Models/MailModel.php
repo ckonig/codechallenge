@@ -10,15 +10,10 @@ class MailModel extends Model {
 
     protected $fillable = [
         'title',
-        'from',
+        'fromName',
+        'fromEmail',
         'to',
         'body_txt',
         'body_html'
     ];
-
-    public $title;
-    public $from;
-    public $to;
-    public $body_txt;
-    public $body_html;
 }

@@ -20,14 +20,13 @@ class MailjetMessageBuilderTest extends TestCase
         $this->assertNotNull($converted['body']['Messages']);
         $this->assertNotNull($converted['body']['Messages'][0]);
         $this->assertNotNull($converted['body']['Messages'][0]);
-        $this->assertEquals($mail->from->name, $converted['body']['Messages'][0]['FromName']);
-        $this->assertEquals($mail->from->email, $converted['body']['Messages'][0]['FromEmail']);
+        $this->assertEquals($mail->fromName, $converted['body']['Messages'][0]['FromName']);
+        $this->assertEquals($mail->fromEmail, $converted['body']['Messages'][0]['FromEmail']);
         $this->assertEquals($mail->title, $converted['body']['Messages'][0]['Subject']);
         $this->assertEquals(2, count($converted['body']['Messages'][0]['Recipients']));
-        foreach ($mail->to as $i => $to) {
+        foreach (json_decode($mail->to) as $i => $to) {
             $recipient = $converted['body']['Messages'][0]['Recipients'][$i];
-            $this->assertEquals($to->name, $recipient['Name']);
-            $this->assertEquals($to->email, $recipient['Email']);
+            $this->assertEquals($to, $recipient['Email']);
         }
 
         $this->assertEquals($mail->body_txt, $converted['body']['Messages'][0]['Text-Part']);

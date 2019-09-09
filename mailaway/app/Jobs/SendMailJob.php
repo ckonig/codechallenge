@@ -36,8 +36,16 @@ class SendMailJob implements ShouldQueue
      */
     public function handle(AggregateMailer $mailer)
     {
-        $mailer->sendMail($this->mail);
-        $this->mail->status = 'sent';
-        $this->mail->save();
+        $result = $mailer->sendMail($this->mail);
+        if ($result) {
+            $this->mail->status = 'sent';
+            $this->mail->save();
+            Log::info('Successfully sent mail ' . $this->mail->id . ' using AggregateMailer.');
+        } else {
+            //@todo implement retry with queue
+            $this->mail->status = 'retry';
+            $this->mail->save();
+            Log::error('Failed to send mail ' . $this->mail->id . ' using AggregateMailer.');
+        }
     }
 }

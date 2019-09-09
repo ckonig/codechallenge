@@ -2,31 +2,21 @@
 
 namespace App\Services;
 
-use Log;
-use App\Models\ContactModel;
-use App\Models\MailModel;
 use App\Jobs\SendMailJob;
+use App\Models\MailModel;
+use Log;
 
-class MailFrontendService {
-    public function processMailRequest($fromName, $fromEmail, $title, $recipients, $txt, $html) {
-        $from = new ContactModel();
-        $from->name = $fromName;
-        $from->email = $fromEmail;
-
-        $to = [];
-        foreach($recipients as $to) {
-            $recipient = new ContactModel();
-            $recipient->name = $to['name'];
-            $recipient->email = $to['email'];
-            $to[] = $recipient;
-        }
-
+class MailFrontendService
+{
+    public function processMailRequest(string $fromName, string $fromEmail, string $title, array $recipients, string $txt, string $html)
+    {
         $mail = new MailModel([
             'title' => $title,
-            'from' => $from->toJson(),
-            'to' => json_encode($to),
-            'body_txt'=> json_encode($txt),
-            'body_html' => json_encode($html)
+            'fromName' => $fromName,
+            'fromEmail' => $fromEmail,
+            'to' => json_encode($recipients),
+            'body_txt' => json_encode($txt),
+            'body_html' => json_encode($html),
         ]);
 
         $mail->save();

@@ -30,8 +30,7 @@ class SendMailRequest extends FormRequest
             'from.name' => 'required',
             'from.email'=> 'required|email',
             'to'=> 'required|array|min:1',
-            'to.*.name'=> 'required',
-            'to.*.email' => 'required|email',
+            'to*' => 'required|email',
         ];
     }
 }

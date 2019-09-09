@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Jobs\SendMailJob;
-use App\Models\ContactModel;
 use Illuminate\Console\Command;
 use App\Models\MailModel;
 use App\Services\MailFrontendService;

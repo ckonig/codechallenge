@@ -10,13 +10,12 @@ class MailjetMessageBuilder
     {
         $message = [];
         $message['Subject'] = $mail->title;
-        $message['FromEmail'] = $mail->from->email;
-        $message['FromName'] = $mail->from->name;
+        $message['FromEmail'] = $mail->fromEmail;
+        $message['FromName'] = $mail->fromName;
         $message['Recipients'] = [];
-        foreach ($mail->to as $to) {
+        foreach (json_decode($mail->to) as $to) {
             $recipient = [];
-            $recipient['Email'] = $to->email;
-            $recipient['Name'] = $to->name;
+            $recipient['Email'] = $to;
             $message['Recipients'][] = $recipient;
         }
 

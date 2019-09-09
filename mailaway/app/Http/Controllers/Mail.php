@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\SendMailRequest;
 use App\Models\MailModel;
-use App\Models\ContactModel;
 use App\Services\MailFrontendService;
 use Log;
 

@@ -15,18 +15,24 @@ class SendMailApiTest extends TestCase
             'email' => 'noreply@mailaway.com',
         ],
         'to' => [
-            0 => [
-                'name' => 'Christian koenig',
-                'email' => 'itckoenig@gmail.com',
-            ],
+            'itckoenig@gmail.com',
         ],
     ];
 
     public function testPostWithCompleteDataReturns200()
     {
         $body = $this->data;
-        $response = $this->json('POST', '/api/mail', $body);
-        $response->assertStatus(200);
+        $postresponse = $this->json('POST', '/api/mail', $body);
+        $postresponse->assertStatus(200);
+        $postcontent = json_decode($postresponse->getContent());
+        $id = $postcontent->id;
+        $status = $postcontent->status;
+        $this->assertNotNull($id);
+
+        $getresponse = $this->json('GET', '/api/mail/' . $id);
+        $getresponse->assertStatus(200);
+        $getcontent = json_decode($getresponse->getContent());
+        $this->assertEquals('sent', $getcontent->status);
     }
 
     public function testPostWithMissingSubjectReturns422()

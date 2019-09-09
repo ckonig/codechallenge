@@ -16,12 +16,11 @@ class SendgridMessageBuilderTest extends TestCase
         $builder = new SendgridMessageBuilder();
         $converted = $builder->getMessage($mail);
         $this->assertNotNull($converted);
-        $this->assertEquals($mail->from->name, $converted->getFrom()->getName());
-        $this->assertEquals($mail->from->email, $converted->getFrom()->getEmail());
-        foreach ($mail->to as $i => $to) {
+        $this->assertEquals($mail->fromName, $converted->getFrom()->getName());
+        $this->assertEquals($mail->fromEmail, $converted->getFrom()->getEmail());
+        foreach (json_decode($mail->to) as $i => $to) {
             $recipient = $converted->getPersonalizations()[0]->getTos()[$i];
-            $this->assertEquals($to->name, $recipient->getName());
-            $this->assertEquals($to->email, $recipient->getEmail());
+            $this->assertEquals($to, $recipient->getEmail());
         }
 
         $this->assertEquals($mail->title, $converted->getGlobalSubject()->getSubject());
