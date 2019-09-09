@@ -6,7 +6,7 @@ export default {
             title,
             body_html,
             body_txt,
-            to: to.split(',').map(item => item.trim()),
+            to: to.split(';').map(item => item.trim()),
             from: {
                 email: senderEmail,
                 name: senderName
