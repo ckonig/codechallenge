@@ -74,25 +74,27 @@
 
       <div class="form-group">
         <label for="body_txt">Content (text)</label>
-        <input
+        <textarea
           class="form-control"
           v-bind:class="{ 'is-invalid': errors.body_txt }"
           id="body_txt"
           v-model="body_txt"
           type="text"
-        />
+          rows="4"
+        ></textarea>
         <div v-if="errors.body_txt" class="invalid-feedback">{{errors.body_txt.join(' ')}}</div>
       </div>
 
       <div class="form-group">
         <label for="body_html">Content (html)</label>
-        <input
+        <textarea
           class="form-control"
           v-bind:class="{ 'is-invalid': errors.body_html }"
           id="body_html"
           v-model="body_html"
           type="text"
-        />
+          rows="4"
+        ></textarea>
         <div v-if="errors.body_html" class="invalid-feedback">{{errors.body_html.join(' ')}}</div>
       </div>
 

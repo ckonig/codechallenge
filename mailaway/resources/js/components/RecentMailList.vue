@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>History</h2>
+    <h2 v-if="mails.length">History</h2>
     <div v-for="(mail, index) in mails" v-bind:key="index">
       <div class="card">
         <div class="card-header">

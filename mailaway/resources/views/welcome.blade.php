@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel="stylesheet" href="/css/app.css"/>
-        <title>Mailaway</title>
+        <title>mailaway</title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
     <body>
