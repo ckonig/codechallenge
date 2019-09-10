@@ -79,11 +79,16 @@ cd codechallenge
 git submodule init
 git submodule update
 
-//setup configuration
-cp .\mailaway\setup\laradock.env .\laradock\.env
-cp .\mailaway\setup\default.conf .\laradock\nginx\sites\default.conf
-cp .\mailaway\setup\mailaway.env .\mailaway\.env
-cp .\mailaway\setup\laravel-worker.conf .\laradock\php-worker\supervisor.d\laravel-worker.conf
+//update configuration files (powershell)
+
+./updateConfig.ps1 
+
+//update configuration files (others)
+
+cp .\setup\laradock.env .\laradock\.env
+cp .\setup\default.conf .\laradock\nginx\sites\default.conf
+cp .\setup\mailaway.env .\.env
+cp .\setup\laravel-worker.conf .\laradock\php-worker\supervisord.d\laravel-worker.conf
 
 //start container
 cd laradock
