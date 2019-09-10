@@ -1,12 +1,13 @@
 <template>
   <div>
-    <header class="navbar navbar-dark bg-dark">
-      <a class="navbar-brand" href="#">
-        <h1>mailaway</h1>
-      </a>
-      <check-mail-form></check-mail-form>
-    </header>
     <div class="container">
+      <header class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">
+          <h1>mailaway</h1>
+        </a>
+        <check-mail-form></check-mail-form>
+      </header>
+
       <div class="row">&nbsp;</div>
       <div class="row">
         <main class="col-lg-9">

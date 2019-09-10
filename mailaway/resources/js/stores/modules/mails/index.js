@@ -12,7 +12,7 @@ const getters = {
         return state.mails;
     },
     getActiveMail: (state, getters) => {
-        return state.activeMail;
+        return state.dict[state.activeMail];
     },
     isLoadingMail: (state, getters) => {
         return state.isLoadingMail;
@@ -27,6 +27,9 @@ const actions = {
             commit('setActiveMail', id);
             commit('setIsLoadingMail', false);
         })
+    },
+    setActiveMail: ({ commit, state }, { id }) => {
+        commit('setActiveMail', id);
     }
 }
 
