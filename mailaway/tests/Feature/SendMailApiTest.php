@@ -101,4 +101,12 @@ class SendMailApiTest extends TestCase
         $response = $this->json('POST', '/api/mail', $body);
         $response->assertStatus(422);
     }
+
+    public function testPostWithInvalidRecipientsReturns422()
+    {
+        $body = $this->data;
+        $body['to'] = ['a', 'b'];
+        $response = $this->json('POST', '/api/mail', $body);
+        $response->assertStatus(422);
+    }
 }
