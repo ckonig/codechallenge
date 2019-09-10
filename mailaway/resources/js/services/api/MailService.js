@@ -1,16 +1,14 @@
 import axios from 'axios';
 
 export default {
-    sendMail(title, senderName, senderEmail, to, body_txt, body_html) {
+    sendMail(title, fromName, fromEmail, to, body_txt, body_html) {
         return axios.post('/api/mail', {
             title,
             body_html,
             body_txt,
-            to: to.split(';').map(item => item.trim()),
-            from: {
-                email: senderEmail,
-                name: senderName
-            }
+            to: to.split(';').map(item => item.trim()).filter(item => item !== ''),
+            fromName,
+            fromEmail
         }).then(response => {
             return response.data;
         });

@@ -17,8 +17,8 @@ class SendMailRequest extends FormRequest
             'title' => 'required',
             'body_txt' => 'required',
             'body_html' => 'required',
-            'from.name' => 'required',
-            'from.email' => 'required|email',
+            'fromName' => 'required',
+            'fromEmail' => 'required|email',
             'to' => 'required|array|min:1',
             'to*' => 'required|email',
         ];

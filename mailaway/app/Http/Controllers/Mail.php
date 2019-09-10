@@ -14,9 +14,10 @@ class Mail extends Controller
 
     public function sendMail(SendMailRequest $request)
     {
+        //@todo do not accept array with one empty string as recipients
         $mail = $this->service->processMailRequest(
-            $request->input('from.name'),
-            $request->input('from.email'),
+            $request->input('fromName'),
+            $request->input('fromEmail'),
             $request->input('title'),
             $request->input('to'),
             $request->input('body_txt'),

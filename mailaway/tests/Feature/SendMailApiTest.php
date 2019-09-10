@@ -10,10 +10,8 @@ class SendMailApiTest extends TestCase
         'title' => 'Sent from Feature test via Mailaway',
         'body_txt' => 'You have received an email from the Mailaway service',
         'body_html' => '<h1> YAY </h1> Mailaway works fine',
-        'from' => [
-            'name' => 'Mailaway Service',
-            'email' => 'noreply@mailaway.com',
-        ],
+        'fromName' => 'Mailaway Service',
+        'fromEmail' => 'noreply@mailaway.com',
         'to' => [
             'itckoenig@gmail.com',
         ],
@@ -42,8 +40,8 @@ class SendMailApiTest extends TestCase
 
         $this->assertEquals('sent', $getcontent2->status);
         $this->assertEquals($id, $getcontent2->id);
-        $this->assertEquals($body['from']['name'], $getcontent2->fromName);
-        $this->assertEquals($body['from']['email'], $getcontent2->fromEmail);
+        $this->assertEquals($body['fromName'], $getcontent2->fromName);
+        $this->assertEquals($body['fromEmail'], $getcontent2->fromEmail);
         $this->assertEquals($body['title'], $getcontent2->title);
 
         //@todo this manual decoding looks wrong
@@ -80,10 +78,18 @@ class SendMailApiTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function testPostWithMissingSenderReturns422()
+    public function testPostWithMissingSenderNameReturns422()
     {
         $body = $this->data;
-        unset($body['from']);
+        unset($body['fromName']);
+        $response = $this->json('POST', '/api/mail', $body);
+        $response->assertStatus(422);
+    }
+
+    public function testPostWithMissingSenderEmailReturns422()
+    {
+        $body = $this->data;
+        unset($body['fromEmail']);
         $response = $this->json('POST', '/api/mail', $body);
         $response->assertStatus(422);
     }

@@ -24,10 +24,19 @@ export default {
   },
   methods: {
     checkStatus: function() {
-      MailService.getMail(this.id).then(mail => {
-        console.log(mail);
-        this.status = mail.status;
-      });
+      if (this.id) {
+        MailService.getMail(this.id)
+          .then(mail => {
+            this.status = mail.status;
+          })
+          .catch(error => {
+            if (error.response.status == 405) {
+              this.status = "mail not found";
+            }
+          });
+      } else {
+        this.status = "invalid ID";
+      }
     }
   }
 };

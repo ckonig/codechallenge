@@ -95,7 +95,7 @@ composer install
 
 //install npm dependencies & build UI
 yarn install
-yarn run dev
+npm install --global cross-env
 ```
 
 ## Development / running the app
@@ -105,8 +105,8 @@ yarn run dev
 docker-compose exec workspace bash
 tail -f storage/logs/laravel-[current_date].log
 
-//rebuild vue.js components
-yarn run dev
+//watch and rebuild vue.js components on change
+yarn run watch-poll
 ```
 
 ## Testing
@@ -134,7 +134,7 @@ Following requests can be made with this collection:
 docker-compose exec workspace bash
 
 //send an email
-php artisan mail:send {senderName} {senderEmail} {subject} {txtContent} {htmlContent} {recipient(s)*}
+php artisan mail:send {fromName} {fromEmail} {subject} {txtContent} {htmlContent} {recipient(s)*}
 
 //check status of an email
 php artisan mail:get {id}
