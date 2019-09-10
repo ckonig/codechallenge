@@ -149,6 +149,10 @@ export default {
         .catch(error => {
           if (error.response.status == 422) {
             this.errors = error.response.data.errors;
+            /**
+             * @todo cover errors for single emails
+             * errors: {to.0: ["The to.0 must be a valid email address."]}
+             */
             this.errorMessage = error.response.data.message;
           }
           this.isLoading = false;
