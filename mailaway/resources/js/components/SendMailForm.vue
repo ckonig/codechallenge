@@ -3,30 +3,63 @@
     <h2>Send Mail</h2>
     <form>
       <div class="alert alert-danger" v-if="errorMessage" role="alert">{{errorMessage}}</div>
-      <div class="form-group">
-        <label for="fromName">Sender Name</label>
-        <input
-          class="form-control"
-          v-bind:class="{ 'is-invalid': errors.fromName }"
-          id="fromName"
-          v-model="fromName"
-          type="text"
-        />
-        <div v-if="errors.fromName" class="invalid-feedback">{{errors.fromName.join(' ')}}</div>
+      <div class="alert alert-info text-center" v-if="isLoading" role="alert">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
       </div>
-
-      <div class="form-group">
-        <label for="fromEmail">Sender Email</label>
-        <input
-          class="form-control"
-          v-bind:class="{ 'is-invalid': errors.fromEmail }"
-          id="fromEmail"
-          v-model="fromEmail"
-          type="text"
-        />
-        <div v-if="errors.fromEmail" class="invalid-feedback">{{errors.fromEmail.join(' ')}}</div>
+      <div class="alert alert-success" v-if="result" role="alert">{{result}}</div>
+      <div class="form-row">
+        <div class="col">
+          <div class="form-group">
+            <label for="fromName">Sender Name</label>
+            <input
+              class="form-control"
+              v-bind:class="{ 'is-invalid': errors.fromName }"
+              id="fromName"
+              v-model="fromName"
+              type="text"
+            />
+            <div v-if="errors.fromName" class="invalid-feedback">{{errors.fromName.join(' ')}}</div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label for="fromEmail">Sender Email</label>
+            <input
+              class="form-control"
+              v-bind:class="{ 'is-invalid': errors.fromEmail }"
+              id="fromEmail"
+              v-model="fromEmail"
+              type="text"
+            />
+            <div v-if="errors.fromEmail" class="invalid-feedback">{{errors.fromEmail.join(' ')}}</div>
+          </div>
+        </div>
       </div>
-
+      <div class="form-row">
+        <div class="col-4">
+          <label for="newRecipient">Add Recipient</label>
+          <input class="form-control" v-model="newRecipient" id="newRecipient" type="text" />
+        </div>
+        <div class="col-2">
+          <label>&nbsp;</label>
+          <button type="button" v-on:click="addRecipient" class="form-control btn btn-secondary">Add</button>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <label for="to">Recipients</label>
+            <input
+              class="form-control"
+              v-bind:class="{ 'is-invalid': errors.to }"
+              id="to"
+              v-model="to"
+              type="text"
+            />
+            <div v-if="errors.to" class="invalid-feedback">{{errors.to.join(' ')}}</div>
+          </div>
+        </div>
+      </div>
       <div class="form-group">
         <label for="title">Title</label>
         <input
@@ -37,18 +70,6 @@
           type="text"
         />
         <div v-if="errors.title" class="invalid-feedback">{{errors.title.join(' ')}}</div>
-      </div>
-
-      <div class="form-group">
-        <label for="to">Recipients</label>
-        <input
-          class="form-control"
-          v-bind:class="{ 'is-invalid': errors.to }"
-          id="to"
-          v-model="to"
-          type="text"
-        />
-        <div v-if="errors.to" class="invalid-feedback">{{errors.to.join(' ')}}</div>
       </div>
 
       <div class="form-group">
@@ -77,10 +98,6 @@
 
       <div class="form-group">
         <button class="btn btn-primary" v-on:click="sendMail" type="button">Send Mail</button>
-        <div v-if="isLoading" class="spinner-border" role="status">
-          <span class="sr-only">Loading...</span>
-        </div>
-        <span>{{result}}</span>
       </div>
     </form>
   </div>
@@ -94,6 +111,7 @@ export default {
       title: "",
       fromName: "",
       fromEmail: "",
+      newRecipient: "",
       to: "",
       body_txt: "",
       body_html: "",
@@ -106,6 +124,8 @@ export default {
   methods: {
     sendMail: function() {
       this.isLoading = true;
+      this.errors = [];
+      this.errorMessage = "";
       MailService.sendMail(
         this.title,
         this.fromName,
@@ -133,6 +153,13 @@ export default {
           }
           this.isLoading = false;
         });
+    },
+    addRecipient: function() {
+      if (this.to) {
+        this.to += ";";
+      }
+      this.to += this.newRecipient;
+      this.newRecipient = "";
     }
   }
 };
