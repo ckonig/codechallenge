@@ -1,14 +1,20 @@
 <template>
   <div>
-    <h1>Mailaway</h1>
+    <header class="navbar navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">
+        <h1>Mailaway</h1>
+      </a>
+      <check-mail-form></check-mail-form>
+    </header>
     <div class="container">
+      <div class="row">&nbsp;</div>
       <div class="row">
-        <div class="col-lg-9">
+        <main class="col-lg-9">
           <send-mail-form></send-mail-form>
-        </div>
-        <div class="col-lg">
-          <check-mail-form></check-mail-form>
-        </div>
+        </main>
+        <aside class="col-lg">
+          <recent-mail-list></recent-mail-list>
+        </aside>
       </div>
     </div>
   </div>

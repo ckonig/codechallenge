@@ -104,6 +104,7 @@
 </template>
 
 <script>
+import store from "../stores";
 import MailService from "../services/api/MailService";
 export default {
   data: function() {
@@ -144,6 +145,7 @@ export default {
             this.body_txt = "";
             this.body_html = "";
             this.isLoading = false;
+            store.dispatch("addMail", { id: mail.id });
           }
         })
         .catch(error => {

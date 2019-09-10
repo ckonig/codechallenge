@@ -10,6 +10,8 @@ require('axios');
 
 window.Vue = require('vue');
 
+import store from './stores'
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -23,6 +25,7 @@ window.Vue = require('vue');
 
  Vue.component('app-root', require('./components/AppRoot.vue').default);
  Vue.component('send-mail-form', require('./components/SendMailForm.vue').default);
+ Vue.component('recent-mail-list', require('./components/RecentMailList.vue').default);
  Vue.component('check-mail-form', require('./components/CheckMailForm.vue').default, {
     methods:{
         checkStatus: function() {
