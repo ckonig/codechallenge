@@ -1,6 +1,7 @@
 import api from '../../../services/api/MailService';
 
 const state = {
+    dict: {},
     mails: [],
     activeMail: '',
     isLoadingMail: false,
@@ -31,10 +32,14 @@ const actions = {
 
 const mutations = {
     addMail: (state, mail) => {
-        state.mails.unshift(mail);
+        if (mail && mail.id) {
+            state.dict[mail.id] = mail;
+        }
+        state.mails = Object.values(state.dict).reverse();
     },
     setActiveMail: (state, id) => {
         state.activeMail = id;
+        console.log('active mail is now ' + id)
     },
     setIsLoadingMail: (state, value) => {
         state.isLoadingMail = value;
