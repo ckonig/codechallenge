@@ -26,13 +26,8 @@ import store from './stores'
  Vue.component('app-root', require('./components/AppRoot.vue').default);
  Vue.component('send-mail-form', require('./components/SendMailForm.vue').default);
  Vue.component('recent-mail-list', require('./components/RecentMailList.vue').default);
- Vue.component('check-mail-form', require('./components/CheckMailForm.vue').default, {
-    methods:{
-        checkStatus: function() {
-            console.log('todo: check status');
-        }
-    }
- });
+ Vue.component('active-mail-display', require('./components/ActiveMailDisplay.vue').default);
+ Vue.component('check-mail-form', require('./components/CheckMailForm.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

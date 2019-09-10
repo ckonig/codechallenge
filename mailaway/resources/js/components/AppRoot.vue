@@ -11,6 +11,7 @@
       <div class="row">&nbsp;</div>
       <div class="row">
         <main class="col-lg-9">
+            <active-mail-display></active-mail-display>
           <send-mail-form></send-mail-form>
         </main>
         <aside class="col-lg">

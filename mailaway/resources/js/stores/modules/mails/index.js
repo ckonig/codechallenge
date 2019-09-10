@@ -12,7 +12,7 @@ const getters = {
         return state.mails;
     },
     getActiveMail: (state, getters) => {
-        return state.dict[state.activeMail];
+        return state.activeMail && state.dict[state.activeMail];
     },
     isLoadingMail: (state, getters) => {
         return state.isLoadingMail;
@@ -24,7 +24,6 @@ const actions = {
         commit('setIsLoadingMail', true);
         api.getMail(id).then(mail => {
             commit('addMail', mail);
-            commit('setActiveMail', id);
             commit('setIsLoadingMail', false);
         })
     },
