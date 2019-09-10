@@ -16,9 +16,16 @@
 - [x] Make AggregateMailer do the retry & backoff parts
 - [x] Add database, generate IDs for every mail. Allow checking email status by ID via web / console interface and postman
 - [x] Decide on queueing technology, add queue to the mix, split app into foreground & background application
-- [ ] Look into vertical scaling of background worker with regards to queue consumption, transaction safety.
+- [ ] Look into scaling of background worker with regards to queue consumption, transaction safety.
+- [ ] Look into load balancing & gateways for scaling of web endpoint
 - [ ] Look into vue.js frontend application
-- [ ] Look into traffic management & gateways for horizontal scaling of web endpoint
+  - [x] Setup skeleton app
+  - [x] implement quick & dirty forms for sending and checking emails
+  - [ ] add form validation
+  - [ ] make UI visually appealing
+  - [ ] after sending email, auto-refresh status of email (push or pull)
+  - [ ] dont forget frontend testing (component based and UI)
+
 
 ## Important Issues
 
@@ -28,7 +35,7 @@
 
 ### Laravel / Laradock
 
-I chose to use Laravel framework, because it's a good real-world way to learn working with this framework. Initially, I used version 5.8, but I had to downgrade to 5.6 in order to use the mailjet/mailjet-laravel package. Using Laradock as a solution for combining Docker and Laravel seemed like a great time-saver to get started.
+I chose to use Laravel framework, because it's a good real-world way to learn working with this framework.  Using Laradock as a solution for combining Docker and Laravel seemed like a great time-saver to get started.
 
 ### HelloWorld approach
 
@@ -44,6 +51,8 @@ I decided to use the composer packages provided by the mail providers, instead o
 ```
 
 There is also a SendGrid connector that directly ties into the Laravel Mailer, but this would conflict with the requirement that the Laravel Mailer shouldn't be used.
+
+Using the mailjet package comes with a downside though: Initially, I used version 5.8, but I had to downgrade to 5.6 in order to use the mailjet/mailjet-laravel package. This needs to be revised.
 
 ### Artisan CLI commands
 
@@ -74,10 +83,11 @@ git submodule update
 cp .\mailaway\setup\laradock.env .\laradock\.env
 cp .\mailaway\setup\default.conf .\laradock\nginx\sites\default.conf
 cp .\mailaway\setup\mailaway.env .\mailaway\.env
+cp .\mailaway\setup\laravel-worker.conf .\laradock\php-worker\supervisor.d\laravel-worker.conf
 
 //start container
 cd laradock
-docker-compose up -d nginx mysql
+docker-compose up -d nginx mysql php-worker
 
 //connect to workspace container and install dependencies
 docker-compose exec workspace bash
@@ -91,10 +101,6 @@ yarn run dev
 ## Development / running the app
 
 ```cli
-//start the queue worker in a separate terminal
-docker-compose exec workspace bash
-php artisan queue:work database
-
 //tail the logs in a separate terminal
 docker-compose exec workspace bash
 tail -f storage/logs/laravel-[current_date].log
@@ -107,7 +113,7 @@ yarn run dev
 
 ### Automated tests
 
-To run the automated tests, connect to the bash of the workspace container, then run ```phpunit```. 
+To run the automated tests, connect to the bash of the workspace container, then run ```phpunit```.
 
 Note: the queue worker needs to be running for the tests to pass.
 
