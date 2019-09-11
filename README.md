@@ -14,18 +14,23 @@
 - [x] Remove HelloWorld remnants
 - [x] Update static CLI mail command to take input from console
 - [x] Make AggregateMailer do the retry & backoff parts
+- [ ] Review & finetune retry/backoff solution
 - [x] Add database, generate IDs for every mail. Allow checking email status by ID via web / console interface and postman
 - [x] Decide on queueing technology, add queue to the mix, split app into foreground & background application
-- [ ] Look into scaling of background worker with regards to queue consumption, transaction safety.
-- [ ] Look into load balancing & gateways for scaling of web endpoint
+  - [ ] Can we use an external queue service to increase reliablity?
+- [ ] Look into scaling of background worker.
+  - [ ] Find and document a way to run multiple instances of the worker
+  - [ ] Review multi-worker solution regarding transaction safety, double consumption, concurrency. Do we need transactions?
+- [x] Look into load balancing & gateways for scaling of web endpoint
+  - [ ] is traefik and docker swarm mode a viable solution?
 - [ ] Look into vue.js frontend application
   - [x] Setup skeleton app
-  - [x] implement quick & dirty forms for sending and checking emails
-  - [ ] add form validation
-  - [ ] make UI visually appealing
-  - [ ] after sending email, auto-refresh status of email (push or pull)
+  - [x] implement quick & dirty forms for sending mails and checking email status
+  - [x] add form validation
+  - [x] make UI more visually appealing
+  - [ ] after sending email, auto-refresh status of email (push instead of pull)
   - [ ] dont forget frontend testing (component based and UI)
-
+  - [ ] bonus: implement mail detail view using routing
 
 ## Important Issues
 
@@ -52,7 +57,7 @@ I decided to use the composer packages provided by the mail providers, instead o
 
 There is also a SendGrid connector that directly ties into the Laravel Mailer, but this would conflict with the requirement that the Laravel Mailer shouldn't be used.
 
-Using the mailjet package comes with a downside though: Initially, I used version 5.8, but I had to downgrade to 5.6 in order to use the mailjet/mailjet-laravel package. This needs to be revised.
+Using the mailjet package comes with a downside though: Initially, I used version 5.8, but I had to downgrade to 5.6 in order to use the mailjet/mailjet-laravel package. This had to be revised later on, therefore a modified fork of the mailjet/laravel package was created and used as dependency.
 
 ### Artisan CLI commands
 
@@ -66,7 +71,7 @@ There are multiple ways to implement Dependency Injection with Laravel. I decide
 
 ### Queue & Data Storage
 
-MySql was relatively painless to setup, which also allowed to use the database driver for the Queue. Using the Eloquent ORM allows automatic generation / migration of the database. and relieves developers from writing SQL queries manually.
+MySql was relatively painless to setup, which also allowed to use the database driver for the Queue. Using the Eloquent ORM allows automatic generation / migration of the database. and relieves developers from writing SQL queries manually. However, in terms of scalability this means the database has become a single point of failure - it would be preferrable to use an external queue service.
 
 The used data structure is as flat as possible, in fact there is only one entity called "MailModel". It contains a json encoded array for the receiver email addresses. This array is intentionally not designed as a separate entity to keep the performance high.
 
@@ -81,7 +86,7 @@ git submodule update
 
 //update configuration files (powershell)
 
-./updateConfig.ps1 
+./updateConfig.ps1
 
 //update configuration files (others)
 
