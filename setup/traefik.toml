@@ -20,4 +20,4 @@ onHostRule = true
 entryPoint = "http"
 
 [[acme.domais]]
-main = "itckoenig.spdns.de"
+main = "itckoenig.spdns.eu"

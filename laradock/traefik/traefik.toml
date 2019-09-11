@@ -4,20 +4,23 @@ defaultEntryPoints = ["http", "https"]
   [entryPoints.http]
   address = ":80"
     [entryPoints.http.redirect]
-      entryPoint = "https"
+    entryPoint = "https"
   [entryPoints.https]
   address = ":443"
     [entryPoints.https.tls]
 
 [web]
 address = ":8080"
+
 [acme]
-email = "email@example.org"
+email = "itckoenig@gmail.com"
 storage = "acme.json"
 entryPoint = "https"
 onHostRule = true
-  [acme.httpChallenge]
-    entryPoint = "http"
+caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+
+[acme.httpChallenge]
+entryPoint = "http"
 
 [[acme.domais]]
-  main = "localhost"
+main = "itckoenig.spdns.eu"

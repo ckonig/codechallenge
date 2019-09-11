@@ -284,7 +284,7 @@ services:
         - backend
       labels:
         - traefik.backend=nginx
-        - traefik.frontend.rule=Host:itckoenig.spdns.de
+        - traefik.frontend.rule=Host:itckoenig.spdns.eu
         - traefik.port=80
         - traefik.enable=true
 
@@ -1500,7 +1500,7 @@ services:
         - backend
       labels:
         - traefik.backend=traefik
-        - traefik.frontend.rule=Host:itckoenig.spdns.de
+        - traefik.frontend.rule=Host:itckoenig.spdns.eu
         - traefik.port=8080
         - traefik.enable=true
 
