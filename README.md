@@ -71,7 +71,7 @@ The used data structure is as flat as possible, in fact there is only one entity
 The requirements state that the service should be horizontally scalable. In the current solutions there are limitations for that.
 
 - The worker is scalable, and it's possible to run multiple instances at the same time. It remains to be researched how the database queue driver supports this scenario, and thorough review should be done as to how laravel implements transations in queue processing.
-- The api / web application is scalable in theory. //@todo make traefik work with two nginxes.  
+- The web/api application is exposed through the traefik load balancer, which will delegate the requests to the nginx instances in a round-robin approach. However all nginx instances appear to be using the same php-fpm instance. (this needs further investigation)
 - So far the only way I managed to run the application was using docker-compose. But compose is not compatible with swarm mode, and right now I have doubts whether this can actually be deployed accross physical hosts.
 
 ## Setup
@@ -83,20 +83,9 @@ cd codechallenge
 git submodule init
 git submodule update
 
-//update configuration files (powershell)
-
-./updateConfig.ps1
-
-//update configuration files (others)
-
-cp .\setup\laradock.env .\laradock\.env
-cp .\setup\default.conf .\laradock\nginx\sites\default.conf
-cp .\setup\mailaway.env .\.env
-cp .\setup\laravel-worker.conf .\laradock\php-worker\supervisord.d\laravel-worker.conf
-
 //start container
 cd laradock
-docker-compose up -d nginx mysql php-worker
+docker-compose up -d
 
 //connect to workspace container and install dependencies
 docker-compose exec workspace bash
