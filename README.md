@@ -21,8 +21,8 @@
 - [ ] Look into scaling of background worker.
   - [ ] Find and document a way to run multiple instances of the worker
   - [ ] Review multi-worker solution regarding transaction safety, double consumption, concurrency. Do we need transactions?
-- [x] Look into load balancing & gateways for scaling of web endpoint
-  - [ ] is traefik and docker swarm mode a viable solution?
+- [x] Look into scalability of the web app
+  - [ ] setup working traefik with two nginx instances
 - [ ] Look into vue.js frontend application
   - [x] Setup skeleton app
   - [x] implement quick & dirty forms for sending mails and checking email status
@@ -31,6 +31,7 @@
   - [ ] after sending email, auto-refresh status of email (push instead of pull)
   - [ ] dont forget frontend testing (component based and UI)
   - [ ] bonus: implement mail detail view using routing
+- [ ] Architectural review & critique
 
 ## Important Issues
 
@@ -40,24 +41,14 @@
 
 ### Laravel / Laradock
 
-I chose to use Laravel framework, because it's a good real-world way to learn working with this framework.  Using Laradock as a solution for combining Docker and Laravel seemed like a great time-saver to get started.
-
-### HelloWorld approach
-
-Since most technology choices were unfamiliar to me, I decided to implement a simple HelloWorld scenario at first. This allowed me to get familiar with the technology stack, while not losing time on the details of the actual domain logic.
+I chose to use Laravel framework, because it's a good real-world way to learn working with this framework.  
+Using Laradock as an out-of-the-box solution combining Docker and Laravel seemed like a great time-saver to get started.
 
 ### MailJet & Sendgrid connectors
 
-I decided to use the composer packages provided by the mail providers, instead of implementing an API connector for their REST Apis. Main reason here is to save time & energy. The packages I used were
+I decided to use the composer packages provided by the mail service providers, instead of implementing an API connector for their REST Apis. Main reason here is to save time & energy.
 
-```json
-"mailjet/laravel-mailjet": "^2.0",
-"sendgrid/sendgrid": "^7.3"
-```
-
-There is also a SendGrid connector that directly ties into the Laravel Mailer, but this would conflict with the requirement that the Laravel Mailer shouldn't be used.
-
-Using the mailjet package comes with a downside though: Initially, I used version 5.8, but I had to downgrade to 5.6 in order to use the mailjet/mailjet-laravel package. This had to be revised later on, therefore a modified fork of the mailjet/laravel package was created and used as dependency.
+Using the mailjet package eventually came with a downside though: Initially, I used laravel version 5.8, but I had to downgrade to 5.6 in order to use the mailjet/mailjet-laravel package. This had to be revised later on, therefore a modified fork of the mailjet/laravel package was created and used as dependency.
 
 ### Artisan CLI commands
 
@@ -71,9 +62,17 @@ There are multiple ways to implement Dependency Injection with Laravel. I decide
 
 ### Queue & Data Storage
 
-MySql was relatively painless to setup, which also allowed to use the database driver for the Queue. Using the Eloquent ORM allows automatic generation / migration of the database. and relieves developers from writing SQL queries manually. However, in terms of scalability this means the database has become a single point of failure - it would be preferrable to use an external queue service.
+MySql was relatively painless to setup, which also allowed to use the database driver for the Queue. Using the Eloquent ORM allows automatic generation / migration of the database. and relieves developers from writing SQL queries manually. However, in terms of scalability this means the database has become a single point of failure, and scaling / replicating SQL databases can be quite troublesome as well - it would be preferrable to use an external queue service.
 
 The used data structure is as flat as possible, in fact there is only one entity called "MailModel". It contains a json encoded array for the receiver email addresses. This array is intentionally not designed as a separate entity to keep the performance high.
+
+### Scalability
+
+The requirements state that the service should be horizontally scalable. In the current solutions there are limitations for that.
+
+- The worker is scalable, and it's possible to run multiple instances at the same time. It remains to be researched how the database queue driver supports this scenario, and thorough review should be done as to how laravel implements transations in queue processing.
+- The api / web application is scalable in theory. //@todo make traefik work with two nginxes.  
+- So far the only way I managed to run the application was using docker-compose. But compose is not compatible with swarm mode, and right now I have doubts whether this can actually be deployed accross physical hosts.
 
 ## Setup
 
@@ -103,9 +102,13 @@ docker-compose up -d nginx mysql php-worker
 docker-compose exec workspace bash
 composer install
 
+//create database
+php artisan migrate:fresh
+
 //install npm dependencies & build UI
 yarn install
 npm install --global cross-env
+yarn run dev
 ```
 
 ## Development / running the app
