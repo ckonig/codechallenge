@@ -16,9 +16,20 @@ class GetMail extends Command
         $id = $this->argument('id');
         $mail = $service->retrieveMail($id);
         if ($mail) {
-            $this->info('status for email #' . $id . ': ' . $mail->status);
-            $this->info('recipients: ' . $mail->to);
-            $this->info('title: ' . $mail->title);
+            $this->info("Mail ID:   $mail->id");
+            $this->info("Status:    $mail->status");
+            $this->info("From:      $mail->fromEmail");
+            $this->info("Recipients:");
+            $recipients = json_decode($mail->to);
+            foreach ($recipients as $to) {
+                $this->info("           - $to");
+            }
+
+            $this->info("Subject:   $mail->title");
+            $this->info("Text Content:");
+            $this->info($mail->body_txt);
+            $this->info("HTML Content:");
+            $this->info($mail->body_html);
             return true;
         } else {
             $this->error('email #' . $id . ' not found');

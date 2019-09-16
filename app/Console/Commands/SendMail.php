@@ -30,8 +30,7 @@ class SendMail extends Command
             $this->argument('html')
         );
 
-        $success = true; //@todo generate & return ID
-        $this->info($success ? ('mail #' . $mail->id . ' created, status: ' . $mail->status) : 'mail not sent!');
-        return $success ? 0 : 1;
+        $this->info("Created Mail with ID:$mail->id");
+        return 0;
     }
 }
