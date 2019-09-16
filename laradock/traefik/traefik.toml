@@ -9,7 +9,7 @@ defaultEntryPoints = ["http", "https"]
   address = ":443"
     [entryPoints.https.tls]
       [[entryPoints.https.tls.certificates]]
-      certFile = "/cert/cert.crt"
-      keyFile = "/cert/cert.key"
+      certFile = "/cert/localhost.crt"
+      keyFile = "/cert/localhost.key"
 [api]
 address = ":8080"

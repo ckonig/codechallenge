@@ -18,11 +18,13 @@
 - [x] Add database, generate IDs for every mail. Allow checking email status by ID via web / console interface and postman
 - [x] Decide on queueing technology, add queue to the mix, split app into foreground & background application
   - [ ] Can we use an external queue service to increase reliablity?
-- [ ] Look into scaling of background worker.
-  - [ ] Find and document a way to run multiple instances of the worker
+- [x] Look into scaling of background worker.
+  - [x] Find and document a way to run multiple instances of the worker
   - [ ] Review multi-worker solution regarding transaction safety, double consumption, concurrency. Do we need transactions?
 - [x] Look into scalability of the web app
-  - [ ] setup working traefik with two nginx instances
+  - [x] setup working traefik with multiple nginx instances
+  - [x] look into scaling of php-fpm
+  - [ ] document potential scaling of the database
 - [ ] Look into vue.js frontend application
   - [x] Setup skeleton app
   - [x] implement quick & dirty forms for sending mails and checking email status
@@ -43,6 +45,8 @@
 
 I chose to use Laravel framework, because it's a good real-world way to learn working with this framework.  
 Using Laradock as an out-of-the-box solution combining Docker and Laravel seemed like a great time-saver to get started.
+
+Eventually, the overhead of laradock was removed, and the app was reduced to its necessary dependencies and configurations.
 
 ### MailJet & Sendgrid connectors
 
@@ -80,8 +84,6 @@ The requirements state that the service should be horizontally scalable. In the 
 //get sources
 git clone https://github.com/ckonig/codechallenge
 cd codechallenge
-git submodule init
-git submodule update
 
 //start container
 cd laradock
@@ -103,21 +105,13 @@ yarn run dev
 ## Development / running the app
 
 ```cli
-//tail the logs in a separate terminal
-docker-compose exec workspace bash
-tail -f storage/logs/laravel-[current_date].log
-
 //watch and rebuild vue.js components on change
 yarn run watch-poll
 ```
 
-## Testing
-
 ### Automated tests
 
 To run the automated tests, connect to the bash of the workspace container, then run ```phpunit```.
-
-Note: the queue worker needs to be running for the tests to pass.
 
 ### Postman & JSON API
 
@@ -141,3 +135,7 @@ php artisan mail:send {fromName} {fromEmail} {subject} {txtContent} {htmlContent
 //check status of an email
 php artisan mail:get {id}
 ```
+
+### Web UI
+
+To use the web UI, open 
