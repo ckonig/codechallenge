@@ -147,7 +147,7 @@ export default {
             this.body_txt = "";
             this.body_html = "";
             this.isLoading = false;
-            store.dispatch("addMail", { id: mail.id });
+            store.dispatch("getMail", { id: mail.id });
           }
         })
         .catch(error => {

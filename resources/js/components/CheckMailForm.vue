@@ -3,6 +3,7 @@
     <input
       class="form-control mr-sm-2"
       v-model="id"
+      v-bind:class="{ 'is-invalid': hasError }"
       type="search"
       placeholder="Find mail by ID"
       aria-label="Search"
@@ -10,7 +11,8 @@
 
     <button
       class="btn btn-primary my-2 my-sm-0"
-      v-on:click="addMail"
+      v-on:click="getMail"
+      v-bind:class="{'btn-outline-danger': hasError}"
       v-bind:disabled="isLoading"
       type="button"
     >
@@ -34,11 +36,14 @@ export default {
   computed: {
     isLoading() {
       return store.getters.isLoadingMail;
+    },
+    hasError() {
+        return store.getters.hasLoadMailError;
     }
   },
   methods: {
-    addMail() {
-      store.dispatch("addMail", { id: this.id });
+    getMail() {
+      store.dispatch("getMail", { id: this.id });
     }
   }
 };

@@ -27,7 +27,7 @@
         </div>
         <div class="card-body">
           <h6 class="card-subtitle mb-2 text-muted">{{mail.updated_at}}</h6>
-          <a href="#" v-on:click="addMail(mail.id)" class="card-link">Refresh</a>
+          <a href="#" v-on:click="getMail(mail.id)" class="card-link">Refresh</a>
           <a href="#" v-on:click="setActiveMail(mail.id)" class="card-link">Show</a>
         </div>
       </div>
@@ -44,8 +44,8 @@ export default {
     }
   },
   methods: {
-    addMail(id) {
-      store.dispatch("addMail", { id });
+    getMail(id) {
+      store.dispatch("getMail", { id });
     },
     setActiveMail(id) {
       store.dispatch("setActiveMail", { id });

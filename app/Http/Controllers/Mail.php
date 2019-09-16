@@ -42,6 +42,10 @@ class Mail extends Controller
     public function getMail(int $id)
     {
         $entity = $this->service->retrieveMail($id);
-        return response()->json($entity);
+        if ($entity) {
+            return response()->json($entity);
+        }
+
+        return abort(404);
     }
 }

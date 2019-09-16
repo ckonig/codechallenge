@@ -3,8 +3,9 @@ import api from '../../../services/api/MailService';
 const state = {
     dict: {},
     mails: [],
-    activeMail: '',
+    activeMail: null,
     isLoadingMail: false,
+    loadMailError: false,
 }
 
 const getters = {
@@ -16,16 +17,26 @@ const getters = {
     },
     isLoadingMail: (state, getters) => {
         return state.isLoadingMail;
+    },
+    hasLoadMailError: (state, getters) => {
+        return state.loadMailError;
     }
 }
 
 const actions = {
-    addMail: ({ commit, state }, { id }) => {
+    getMail: ({ commit, state }, { id }) => {
         commit('setIsLoadingMail', true);
-        api.getMail(id).then(mail => {
-            commit('addMail', mail);
-            commit('setIsLoadingMail', false);
-        })
+        commit('setLoadMailError', false);
+        api.getMail(id)
+            .then(mail => {
+                commit('addMail', mail);
+            })
+            .catch(() => {
+                console.log('caught in store');
+                commit('setLoadMailError', true);
+            }).finally(() => {
+                commit('setIsLoadingMail', false);
+            });
     },
     setActiveMail: ({ commit, state }, { id }) => {
         commit('setActiveMail', id);
@@ -45,6 +56,9 @@ const mutations = {
     },
     setIsLoadingMail: (state, value) => {
         state.isLoadingMail = value;
+    },
+    setLoadMailError: (state, value) => {
+        state.loadMailError = value;
     }
 }
 

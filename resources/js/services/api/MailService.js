@@ -14,8 +14,9 @@ export default {
         });
     },
     getMail(id) {
-        return axios.get('/api/mail/' + id).then(response => {
-            return response.data;
-        });
+        return axios.get('/api/mail/' + id)
+            .then(response => {
+                return response.data;
+            });
     }
 }
