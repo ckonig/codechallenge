@@ -44,9 +44,9 @@ There are multiple ways to implement Dependency Injection with Laravel. I decide
 
 There is a data storage to save the emails, which makes it possible to track the status of the email, which is processed asynchronously.
 
-Initially I used mySQL for the storage. It was interesting to work with the Eloquent ORM and leverage the power of the laravel framework. However I decided to throw away the database and to replace it with a redis based cache. The reasoning is that the requirements explicitly state scalability and reliability, but not long term storage. Caching the email until it is processed (plus 10 minutes to check the status) is sufficient and ensures the data storage doesn't fill up endlessly.
+Initially I used mySQL for the storage. It was interesting to work with the Eloquent ORM and leverage the power of the laravel framework. However I decided to throw away the database and to replace it with a redis based cache. The reasoning is that the requirements explicitly demand scalability and reliability, but not long term storage. Caching the email until it is processed (plus a few minutes to check the status) is sufficient and ensures the data storage doesn't fill up endlessly.
 
-Initially I used the "database" driver for the queue as well. However, this was later changed to use Redis, which should be easier to scale by using a cluster.
+Initially I used the "database" driver for the queue as well. However, this was also later changed to use Redis, which should be easier to scale by using a cluster.
 
 The mySQL database is now only used as a dead letter queue.
 
@@ -54,8 +54,8 @@ The mySQL database is now only used as a dead letter queue.
 
 The requirements state that the service should be horizontally scalable. In the current solution there are limitations for that.
 
-- The queue is implemented using Redis, which can be also transformed into a Redis cluster.
-- The queue worker is scalable, and it's possible to run multiple instances at the same time. It remains to be researched if this leads to double processing of entities!
+- The queue and data storage are running on Redis, which can be transformed into a Redis cluster for higher load.
+- Laravel Horizon is used to run multiple queue workers inside one container. The worker is run inside a php-worker container, which can also be scaled up. It remains to be researched if this potentially leads to double processing of entities!
 - The web/api application is exposed through the traefik load balancer, which will delegate the requests to the nginx instances in a round-robin approach. However all nginx instances appear to be using the same php-fpm instance. This needs further investigation!
 - The Laradock template I started with is based on using docker-compose. But this can only deploy the containers on one host. To deploy this app in a cluster that spans multiple hosts, the .env file needs to be converted into something ```docker stack``` can understand. Otherwise the scalability stays limited to one host machine.
 
@@ -89,6 +89,12 @@ yarn run dev
 //watch and rebuild vue.js components on change
 yarn run watch-poll
 ```
+
+## Monitoring
+
+Open ``http://localhost:9987/`` to use Redis WebUI which gives access to data stored in queue and cache.
+
+Open ``https://localhost/horizon`` to use Horizon which allows monitoring of the workers.
 
 ### Automated tests
 
