@@ -1,5 +1,22 @@
 # Code Challenge
 
+## Table of Contents
+
+1. [status](#status)
+1. [Important Issues](#important-issues)
+1. [Choices and Revisions](#choices-and-revisions)
+   1. [Laravel / Laradock](#laravel-/-laradock)
+   1. [MailJet & Sendgrid connectors](#mailjet-&-sendgrid-connectors)
+   1. [Artisan CLI commands](#artisan-cli-commands)
+   1. [Queue & Data Storage](#queue-&-data-storage)
+1. [Scalability](#scalability)
+1. [Setup](#setup)
+1. [Use](#use)
+   1. [Web UI](#web-ui)
+   1. [Console](#console)
+   1. [JSON API (via Postman)](#json-api-(via-postman))
+1. [Develop](#develop)
+
 ## status
 
 - [ ] Review & finetune retry/backoff solution
@@ -15,14 +32,14 @@
 
 - Find out how to deal with environment config and secrets. It's unacceptable to keep secrets under version control.
 
-## Choices & Revisions
+## Choices and Revisions
 
 ### Laravel / Laradock
 
 I chose to use Laravel framework, because it's a good real-world way to learn working with this framework.  
 Using Laradock as an out-of-the-box solution combining Docker and Laravel seemed like a great time-saver to get started.
 
-Eventually, the overhead of laradock was removed, and the app was reduced to its necessary dependencies and configurations.
+Eventually, much of laradock's overhead was removed, and the app was reduced to its necessary dependencies and configurations.
 
 ### MailJet & Sendgrid connectors
 
@@ -36,10 +53,6 @@ I wasn't familiar with Artisan before, so in the initial planning I was unsure h
 
 This turned out to be beneficial since Artisan console commands are integrated very well in Laravel, which allowed easy customization of the command and even integration testing.
 
-### Dependency Injection
-
-There are multiple ways to implement Dependency Injection with Laravel. I decided to keep it as simple as possible by using the reflection approach without Service Providers or Contracts, until I end up in a situation where I *need* to go a more complicated route.
-
 ### Queue & Data Storage
 
 There is a data storage to save the emails, which makes it possible to track the status of the email, which is processed asynchronously.
@@ -50,7 +63,7 @@ Initially I used the "database" driver for the queue as well. However, this was 
 
 The mySQL database is now only used as a dead letter queue.
 
-### Scalability
+## Scalability
 
 The requirements state that the service should be horizontally scalable. In the current solution there are limitations for that.
 
@@ -83,32 +96,11 @@ npm install --global cross-env
 yarn run dev
 ```
 
-## Development / running the app
+## Use
 
-```cli
-//watch and rebuild vue.js components on change
-yarn run watch-poll
-```
+### Web UI
 
-## Monitoring
-
-Open ``http://localhost:9987/`` to use Redis WebUI which gives access to data stored in queue and cache.
-
-Open ``https://localhost/horizon`` to use Horizon which allows monitoring of the workers.
-
-### Automated tests
-
-To run the automated tests, connect to the bash of the workspace container, then run ```phpunit```.
-
-### Postman & JSON API
-
-There is a Postman collection in this repository (root/postman) that can be used to test the JSON API manually.
-
-Following requests can be made with this collection:
-
-- POST /api/mail (to send an email defined in the request body)
-- GET /api/mail/{id} (to retrieve a previously created email)
-- GET /api/mail/{id}/status (to retrieve the status of a previously created email)
+To use the web UI, open ``https://localhost`` in your browser.
 
 ### Console
 
@@ -123,6 +115,39 @@ php artisan mail:send {fromName} {fromEmail} {subject} {txtContent} {htmlContent
 php artisan mail:get {id}
 ```
 
-### Web UI
+### JSON API (via Postman)
 
-To use the web UI, open ``https://localhost`` in your browser.
+There is a Postman collection in this repository (root/postman) that can be used to test the JSON API manually.
+
+Following requests can be made with this collection:
+
+- POST /api/mail (to send an email defined in the request body)
+- GET /api/mail/{id} (to retrieve the previously created email)
+- GET /api/mail/{id}/status (to retrieve the status of the previously created email)
+
+## Develop
+
+### Watch and build UI
+
+```cli
+//watch and rebuild vue.js components on change
+yarn run watch-poll
+```
+
+### Data Access
+
+Open ``http://localhost:9987/`` to use Redis WebUI which gives access to data stored in queue and cache.
+
+Open ``http://localhost:8080`` to use phpmyadmin to access the dead letter queue.
+
+### Worker monitoring
+
+Open ``https://localhost/horizon`` to use Horizon which allows monitoring of the workers.
+
+### Application logs
+
+Connect to the bash of the workspace container using ``docker-compose exec workspace bash``, then run ```tail -f storage/logs/laravel-[date].log```.
+
+### Automated tests
+
+Connect to the bash of the workspace container using ``docker-compose exec workspace bash``, then run ```phpunit```.
