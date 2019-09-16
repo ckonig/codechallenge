@@ -2,7 +2,7 @@
 
 ## Table of Contents
 
-1. [status](#status)
+1. [todo](#todo)
 1. [Important Issues](#important-issues)
 1. [Choices and Revisions](#choices-and-revisions)
    1. [Laravel / Laradock](#laravel-/-laradock)
@@ -17,12 +17,8 @@
    1. [JSON API (via Postman)](#json-api-(via-postman))
 1. [Develop](#develop)
 
-## status
+## todo
 
-- [ ] Review & finetune retry/backoff solution
-- [ ] Review multi-worker solution regarding transaction safety, double consumption, concurrency. Do we need transactions?
-- [ ]  potential scaling of the database
-- [ ] Look into vue.js frontend application
 - [ ] after sending email, auto-refresh status of email (push instead of pull)
 - [ ] dont forget frontend testing (component based and UI)
 - [ ] bonus: implement mail detail view using routing
@@ -100,7 +96,7 @@ yarn run dev
 
 ### Web UI
 
-To use the web UI, open ``https://localhost`` in your browser.
+To use the web UI, open <https://localhost> in your browser.
 
 ### Console
 
@@ -136,17 +132,17 @@ yarn run watch-poll
 
 ### Data Access
 
-Open ``http://localhost:9987/`` to use Redis WebUI which gives access to data stored in queue and cache.
+Open <http://localhost:9987/> to use Redis WebUI which gives access to data stored in queue and cache.
 
-Open ``http://localhost:8080`` to use phpmyadmin to access the dead letter queue.
+Open <http://localhost:8080> to use phpmyadmin to access the dead letter queue.
 
 ### Worker monitoring
 
-Open ``https://localhost/horizon`` to use Horizon which allows monitoring of the workers.
+Open <https://localhost/horizon> to use Horizon which allows monitoring of the workers.
 
-### Application logs
+### Logs
 
-Connect to the bash of the workspace container using ``docker-compose exec workspace bash``, then run ```tail -f storage/logs/laravel-[date].log```.
+```docker-compose logs -f```
 
 ### Automated tests
 

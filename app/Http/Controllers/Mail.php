@@ -14,7 +14,6 @@ class Mail extends Controller
 
     public function sendMail(SendMailRequest $request)
     {
-        //@todo do not accept array with one empty string as recipients
         $mail = $this->service->processMailRequest(
             $request->input('fromName'),
             $request->input('fromEmail'),
@@ -24,7 +23,7 @@ class Mail extends Controller
             $request->input('body_html')
         );
 
-        // @todo use proper HTTP status code
+        // @todo use proper HTTP status code 201
         return response()->json(['status' => $mail->status, 'id' => $mail->id]);
     }
 

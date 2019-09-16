@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\MailRequest;
 use App\Services\AggregateMailer;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -16,7 +17,6 @@ class SendMailJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $mail;
     private $mailRequest;
 
     public function __construct(MailRequest $mail)
@@ -26,34 +26,36 @@ class SendMailJob implements ShouldQueue
 
     public function handle(AggregateMailer $mailer)
     {
-        $this->mail = Cache::store('redis')->get($this->mailRequest->id);
-        if (empty($this->mail) || is_null($this->mail) || !is_object($this->mail)) {
-            Log::error('Could not retrieve mail from cache');
-            return;
+        $ttl = env('CACHE_TTL', 600);
+        $retries = env('QUEUE_RETRIES', 3);
+
+        $mail = Cache::store('redis')->get($this->mailRequest->id);
+        if (empty($mail) || is_null($mail) || !is_object($mail)) {
+            throw new Exception('Could not retrieve mail from cache');
         }
 
-        $this->mail->attempt++;
-        $prefix = 'Mail #' . $this->mail->id . ' - Attempt ' . $this->mail->attempt . '/3';
-        $result = $mailer->sendMail($this->mail);
+        $mail->attempt++;
+        $prefix = 'Mail #' . $mail->id . ' - Attempt ' . $mail->attempt . '/' . $retries;
+
+        $result = $mailer->sendMail($mail);
 
         //@todo unit test retry & backoff behavior
 
-        //@todo review backoff period increment and number of retries
-
         if ($result) {
-            $this->mail->status = 'sent';
-            Cache::store('redis')->put($this->mail->id, $this->mail, 600);
+            $mail->status = 'sent';
+            Cache::store('redis')->put($mail->id, $mail, $ttl);
             Log::info($prefix . ' successfully sent using AggregateMailer.');
-        } else if ($this->mail->attempt > 2) {
-            $this->mail->status = 'cancelled';
-            Cache::store('redis')->put($this->mail->id, $this->mail, 600);
-            Log::error($prefix . ' failed to send using AggregateMailer.'); //@todo DLQ
+        } else if ($mail->attempt > ($retries - 1)) {
+            $mail->status = 'cancelled';
+            Cache::store('redis')->put($mail->id, $mail, $ttl);
+            Log::error($prefix . ' failed to send using AggregateMailer.');
+            throw new Exception('no more retries');
         } else {
-            $this->mail->status = 'retry';
-            Cache::store('redis')->put($this->mail->id, $this->mail, 600);
-            $delay = pow(2, ($this->mail->attempt + 1));
+            $mail->status = 'retry';
+            $delay = pow(2, ($mail->attempt + 1));
+            Cache::store('redis')->put($mail->id, $mail, $ttl + $delay);
             Log::warning($prefix . ' failed to send using AggregateMailer. requeueing with ' . $delay . 's delay');
-            SendMailJob::dispatch($this->mail)->onConnection('redis')->delay(now()->addSeconds($delay));
+            SendMailJob::dispatch($mailRequest)->onConnection('redis')->delay(now()->addSeconds($delay));
         }
     }
 }
