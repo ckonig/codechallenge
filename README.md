@@ -66,17 +66,22 @@ There are multiple ways to implement Dependency Injection with Laravel. I decide
 
 ### Queue & Data Storage
 
-MySql was relatively painless to setup, which also allowed to use the database driver for the Queue. Using the Eloquent ORM allows automatic generation / migration of the database. and relieves developers from writing SQL queries manually. However, in terms of scalability this means the database has become a single point of failure, and scaling / replicating SQL databases can be quite troublesome as well - it would be preferrable to use an external queue service.
+The database is used to persist the email requests, so that the status of the email can later be retrieved (at the moment of creation, the status will always be "queued").
+MySql was relatively painless to setup, which also allowed to use the Eloquent ORM, which allows automatic generation / migration of the database and relieves developers from writing SQL queries manually. 
+This can be considered a "luxury feature" which would be optional in a high-performance mode.
+
+Initially I used the "database" driver for the queue as well. However, this was later changed to use Redis, which should be easier to scale by using a cluster.
 
 The used data structure is as flat as possible, in fact there is only one entity called "MailModel". It contains a json encoded array for the receiver email addresses. This array is intentionally not designed as a separate entity to keep the performance high.
 
 ### Scalability
 
-The requirements state that the service should be horizontally scalable. In the current solutions there are limitations for that.
+The requirements state that the service should be horizontally scalable. In the current solution there are limitations for that.
 
-- The worker is scalable, and it's possible to run multiple instances at the same time. It remains to be researched how the database queue driver supports this scenario, and thorough review should be done as to how laravel implements transations in queue processing.
-- The web/api application is exposed through the traefik load balancer, which will delegate the requests to the nginx instances in a round-robin approach. However all nginx instances appear to be using the same php-fpm instance. (this needs further investigation)
-- So far the only way I managed to run the application was using docker-compose. But compose is not compatible with swarm mode, and right now I have doubts whether this can actually be deployed accross physical hosts.
+- The queue is implemented using Redis, which can be also transformed into a Redis cluster.
+- The queue worker is scalable, and it's possible to run multiple instances at the same time. It remains to be researched if this leads to double processing of entities!
+- The web/api application is exposed through the traefik load balancer, which will delegate the requests to the nginx instances in a round-robin approach. However all nginx instances appear to be using the same php-fpm instance. This needs further investigation!
+- The Laradock template I started with is based on using docker-compose. But this can only deploy the containers on one host. To deploy this app in a cluster that spans multiple hosts, the .env file needs to be converted into something ```docker stack``` can understand. Otherwise the scalability stays limited to one host machine.
 
 ## Setup
 
@@ -138,4 +143,4 @@ php artisan mail:get {id}
 
 ### Web UI
 
-To use the web UI, open 
+To use the web UI, open ``https://localhost`` in your browser.

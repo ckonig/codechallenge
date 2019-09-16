@@ -13,6 +13,7 @@
         "laravel/framework": "^6.0",
         "laravel/tinker": "^1.0",
         "mailjet/laravel-mailjet": "master",
+        "predis/predis": "^1.1",
         "sendgrid/sendgrid": "^7.3"
     },
     "require-dev": {

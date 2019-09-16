@@ -9,6 +9,8 @@ networks:
 volumes:
   mysql:
     driver: ${VOLUMES_DRIVER}
+  redis:
+    driver: ${VOLUMES_DRIVER}
 
 services:
   ### Workspace Utilities ##################################
@@ -277,3 +279,13 @@ services:
       - traefik.frontend.rule=Host:localhost
       - traefik.port=8080
       - traefik.enable=true
+
+### Redis ################################################
+  redis:
+    build: ./redis
+    volumes:
+      - ${DATA_PATH_HOST}/redis:/data
+    ports:
+      - "${REDIS_PORT}:6379"
+    networks:
+      - backend

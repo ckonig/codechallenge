@@ -21,7 +21,7 @@ class MailFrontendService
 
         $mail->save();
         $mail->refresh();
-        SendMailJob::dispatch($mail)->onConnection('database')->delay(now()->addSeconds(1));
+        SendMailJob::dispatch($mail)->onConnection('redis')->delay(now()->addSeconds(1));
 
         Log::info('Dispatched mail with ID ' . $mail->id . ' to queue');
 
