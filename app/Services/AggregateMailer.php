@@ -20,7 +20,7 @@ class AggregateMailer
                 try {
                     $success = $mailer->sendMail($mail);
                     if ($success) {
-                        Log::info('sent email successfully using ' . $mailer->name);
+                        Log::debug('sent email successfully using ' . $mailer->name);
                     } else {
                         Log::warning('sending email NOT successful using ' . $mailer->name);
                     }
