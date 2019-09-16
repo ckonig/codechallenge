@@ -2,19 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class MailModel extends Model
+class MailModel
 {
-
-    protected $table = 'mails';
-
-    protected $fillable = [
-        'title',
-        'fromName',
-        'fromEmail',
-        'to',
-        'body_txt',
-        'body_html',
-    ];
+    public $title;
+    public $fromName;
+    public $fromEmail;
+    public $to;
+    public $body_txt;
+    public $body_html;
+    public $attempt = 0;
 }

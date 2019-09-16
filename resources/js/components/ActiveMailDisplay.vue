@@ -13,8 +13,6 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  <p>Created: {{activeMail.created_at}}</p>
-                  <p>Updated: {{activeMail.updated_at}}</p>
                   <p>Status: {{activeMail.status}}</p>
                   <p>From: {{activeMail.fromName}} ({{activeMail.fromEmail}})</p>
                   <p>Recipients:</p>

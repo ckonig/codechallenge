@@ -1,38 +1,14 @@
 # Code Challenge
 
-## initial plan of approach / status
+## status
 
-- [x] Create HelloWorld app using Docker & Laradock
-- [x] Create Json controller & ClI app for same HelloWorld service
-- [x] Write sample mailers for SendGrid & MailJet
-- [x] Look into logging solution(s)
-- [x] Make mailers reusable by extracting the sample data and making it parametrized
-- [x] Implement AggregateMailer wrapping the common interface for the two mailers
-- [x] Find out how to deal best with request models (e.g. mail class holding all mail attributes), and automatic controller input validation
-- [x] Design & implement a basic, stubbed external interfaces (web&cli) for email service
-- [x] Connect controller & mailer directly. Manually test the synchronous mail app from both interfaces.
-- [x] Remove HelloWorld remnants
-- [x] Update static CLI mail command to take input from console
-- [x] Make AggregateMailer do the retry & backoff parts
 - [ ] Review & finetune retry/backoff solution
-- [x] Add database, generate IDs for every mail. Allow checking email status by ID via web / console interface and postman
-- [x] Decide on queueing technology, add queue to the mix, split app into foreground & background application
-  - [ ] Can we use an external queue service to increase reliablity?
-- [x] Look into scaling of background worker.
-  - [x] Find and document a way to run multiple instances of the worker
-  - [ ] Review multi-worker solution regarding transaction safety, double consumption, concurrency. Do we need transactions?
-- [x] Look into scalability of the web app
-  - [x] setup working traefik with multiple nginx instances
-  - [x] look into scaling of php-fpm
-  - [ ] document potential scaling of the database
+- [ ] Review multi-worker solution regarding transaction safety, double consumption, concurrency. Do we need transactions?
+- [ ]  potential scaling of the database
 - [ ] Look into vue.js frontend application
-  - [x] Setup skeleton app
-  - [x] implement quick & dirty forms for sending mails and checking email status
-  - [x] add form validation
-  - [x] make UI more visually appealing
-  - [ ] after sending email, auto-refresh status of email (push instead of pull)
-  - [ ] dont forget frontend testing (component based and UI)
-  - [ ] bonus: implement mail detail view using routing
+- [ ] after sending email, auto-refresh status of email (push instead of pull)
+- [ ] dont forget frontend testing (component based and UI)
+- [ ] bonus: implement mail detail view using routing
 - [ ] Architectural review & critique
 
 ## Important Issues
@@ -66,13 +42,13 @@ There are multiple ways to implement Dependency Injection with Laravel. I decide
 
 ### Queue & Data Storage
 
-The database is used to persist the email requests, so that the status of the email can later be retrieved (at the moment of creation, the status will always be "queued").
-MySql was relatively painless to setup, which also allowed to use the Eloquent ORM, which allows automatic generation / migration of the database and relieves developers from writing SQL queries manually. 
-This can be considered a "luxury feature" which would be optional in a high-performance mode.
+There is a data storage to save the emails, which makes it possible to track the status of the email, which is processed asynchronously.
+
+Initially I used mySQL for the storage. It was interesting to work with the Eloquent ORM and leverage the power of the laravel framework. However I decided to throw away the database and to replace it with a redis based cache. The reasoning is that the requirements explicitly state scalability and reliability, but not long term storage. Caching the email until it is processed (plus 10 minutes to check the status) is sufficient and ensures the data storage doesn't fill up endlessly.
 
 Initially I used the "database" driver for the queue as well. However, this was later changed to use Redis, which should be easier to scale by using a cluster.
 
-The used data structure is as flat as possible, in fact there is only one entity called "MailModel". It contains a json encoded array for the receiver email addresses. This array is intentionally not designed as a separate entity to keep the performance high.
+The mySQL database is now only used as a dead letter queue.
 
 ### Scalability
 

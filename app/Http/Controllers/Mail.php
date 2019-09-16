@@ -28,9 +28,13 @@ class Mail extends Controller
         return response()->json(['status' => $mail->status, 'id' => $mail->id]);
     }
 
-    public function getMailStatus(int $id)
+    public function getMailStatus(string $id)
     {
         $entity = $this->service->retrieveMail($id);
+        if (!$entity) {
+            return abort(404);
+        }
+
         return response()->json([
             'id' => $id,
             'status' => $entity->status,
@@ -39,13 +43,13 @@ class Mail extends Controller
     }
 
     //@todo secure this endpoint or remove it
-    public function getMail(int $id)
+    public function getMail(string $id)
     {
         $entity = $this->service->retrieveMail($id);
-        if ($entity) {
-            return response()->json($entity);
+        if (!$entity) {
+            return abort(404);
         }
 
-        return abort(404);
+        return response()->json($entity);
     }
 }

@@ -30,6 +30,7 @@ class SendMailApiTest extends TestCase
         $getresponse = $this->json('GET', '/api/mail/' . $id);
         $getresponse->assertStatus(200);
         $getcontent = json_decode($getresponse->getContent());
+        $this->assertNotNull($getcontent);
         $this->assertEquals('queued', $getcontent->status);
 
         sleep(5);
@@ -45,8 +46,8 @@ class SendMailApiTest extends TestCase
         $this->assertEquals($body['title'], $getcontent2->title);
 
         //@todo this manual decoding looks wrong
-        $this->assertEquals($body['body_txt'], json_decode($getcontent2->body_txt));
-        $this->assertEquals($body['body_html'], json_decode($getcontent2->body_html));
+        $this->assertEquals($body['body_txt'], $getcontent2->body_txt);
+        $this->assertEquals($body['body_html'], $getcontent2->body_html);
 
         $getresponse3 = $this->json('GET', '/api/mail/' . $id . '/status');
         $getresponse3->assertStatus(200);
