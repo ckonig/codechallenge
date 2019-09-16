@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="showForm">
     <h2>Send Mail</h2>
     <form>
       <div class="alert alert-danger" v-if="errorMessage" role="alert">{{errorMessage}}</div>
@@ -100,6 +100,7 @@
 
       <div class="form-group">
         <button class="btn btn-primary" v-on:click="sendMail" type="button">Send Mail</button>
+        <button class="btn btn-secondary" v-on:click="resetDraft" type="button">Reset Form</button>
       </div>
     </form>
   </div>
@@ -111,56 +112,47 @@ import MailService from "../services/api/MailService";
 export default {
   data: function() {
     return {
+      newRecipient: "",
       title: "",
       fromName: "",
       fromEmail: "",
       newRecipient: "",
       to: "",
       body_txt: "",
-      body_html: "",
-      result: "",
-      errors: [],
-      errorMessage: "",
-      isLoading: false
+      body_html: ""
     };
   },
+  computed: {
+    result() {
+      return store.getters.draft.result;
+    },
+    errors() {
+      return store.getters.draft.errors;
+    },
+    errorMessage() {
+      return store.getters.draft.errorMessage;
+    },
+    isLoading() {
+      return store.getters.draft.isLoading;
+    },
+    showForm() {
+        //@todo separate concerns, use route navigation
+        return !store.getters.getActiveMail;
+    }
+  },
   methods: {
+    resetDraft: function() {
+      this.newRecipient = "";
+      this.title = "";
+      this.fromName = "";
+      this.fromEmail = "";
+      this.newRecipient = "";
+      this.to = "";
+      this.body_txt = "";
+      this.body_html = "";
+    },
     sendMail: function() {
-      this.isLoading = true;
-      this.errors = [];
-      this.errorMessage = "";
-      MailService.sendMail(
-        this.title,
-        this.fromName,
-        this.fromEmail,
-        this.to,
-        this.body_txt,
-        this.body_html
-      )
-        .then(mail => {
-          if (mail && mail.status && mail.id) {
-            this.result = mail.id + " - " + mail.status;
-            this.title = "";
-            this.fromName = "";
-            this.fromEmail = "";
-            this.to = "";
-            this.body_txt = "";
-            this.body_html = "";
-            this.isLoading = false;
-            store.dispatch("getMail", { id: mail.id });
-          }
-        })
-        .catch(error => {
-          if (error.response.status == 422) {
-            this.errors = error.response.data.errors;
-            /**
-             * @todo cover errors for single emails
-             * errors: {to.0: ["The to.0 must be a valid email address."]}
-             */
-            this.errorMessage = error.response.data.message;
-          }
-          this.isLoading = false;
-        });
+      store.dispatch("sendDraft", { draft: { ...this } });
     },
     addRecipient: function() {
       if (this.to) {

@@ -7,19 +7,24 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title">#{{activeMail.id}}</h5>
+                  <h5 class="modal-title">#{{activeMail.id}}:{{activeMail.title}}</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true" @click="setActiveMail(false)">&times;</span>
                   </button>
                 </div>
                 <div class="modal-body">
-                  <p>{{activeMail.updated_at}}</p>
+                  <p>Created: {{activeMail.created_at}}</p>
+                  <p>Updated: {{activeMail.updated_at}}</p>
+                  <p>Status: {{activeMail.status}}</p>
                   <p>From: {{activeMail.fromName}} ({{activeMail.fromEmail}})</p>
                   <p>Recipients:</p>
                   <ul v-for="(to, index) in JSON.parse(activeMail.to)" v-bind:key="index">
                     <li>{{to}}</li>
                   </ul>
-                  <p>{{activeMail.body_txt}}</p>
+                  <p>Text Body</p>
+                  <pre>{{activeMail.body_txt}}</pre>
+                  <p>HTML Body</p>
+                  <div v-html="activeMail.body_html"></div>
                 </div>
               </div>
             </div>
