@@ -52,7 +52,7 @@ Eventually, the overhead of laradock was removed, and the app was reduced to its
 
 I decided to use the composer packages provided by the mail service providers, instead of implementing an API connector for their REST Apis. Main reason here is to save time & energy.
 
-Using the mailjet package eventually came with a downside though: Initially, I used laravel version 5.8, but I had to downgrade to 5.6 in order to use the mailjet/mailjet-laravel package. This should be revised later on, either by contributing to the original mailet/mailjet-laravel project or by creating a modified fork of the package and using the fork as dependency.
+Using the mailjet package eventually came with a downside though: Initially, I used laravel version 5.8, but I had to downgrade to 5.6 in order to use the mailjet/mailjet-laravel package. This was revised later on by creating a modified fork of the package and using the fork as dependency (However in the long term it would be better to contribute to the original repository). Using the modified fork allowed upgrading laravel/laravel to the latest version 6.
 
 ### Artisan CLI commands
 

@@ -30,7 +30,9 @@ class SendMail extends Command
             $this->argument('html')
         );
 
-        $this->info("Created Mail with ID:$mail->id");
+        $this->info("Created Mail.");
+        $this->info("ID: $mail->id");
+        $this->info("Status: $mail->status");
         return 0;
     }
 }

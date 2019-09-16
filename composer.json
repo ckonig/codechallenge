@@ -1,7 +1,7 @@
 {
-    "name": "laravel/laravel",
+    "name": "ckonig/mailaway",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "Code Challenge",
     "keywords": [
         "framework",
         "laravel"
@@ -10,9 +10,9 @@
     "require": {
         "php": "^7.1.3",
         "fideloper/proxy": "^4.0",
-        "laravel/framework": "5.6.*",
+        "laravel/framework": "^6.0",
         "laravel/tinker": "^1.0",
-        "mailjet/laravel-mailjet": "^2.0",
+        "mailjet/laravel-mailjet": "master",
         "sendgrid/sendgrid": "^7.3"
     },
     "require-dev": {
@@ -60,5 +60,11 @@
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
         ]
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ckonig/laravel-mailjet"
+        }
+    ]
 }

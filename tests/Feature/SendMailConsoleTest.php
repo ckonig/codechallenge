@@ -8,14 +8,23 @@ class SendMailConsoleTest extends TestCase
 {
     public function testConsole()
     {
-        $exitCode = $this->artisan('mail:send', [
+        $payload = [
             'fromName' => 'Christian',
             'fromEmail' => "itckoenig@gmail.com",
             'title' => "Console Stuff",
             'txt' => "Hooraay",
             'html' => "<h1> Hooraaay</h1>",
             'toEmail' => ['itckoenig@gmail.com'],
-        ]);
-        $this->assertEquals(0, $exitCode);
+        ];
+        $this->artisan('mail:send', $payload)
+            ->expectsOutput('Created Mail.')
+            ->expectsOutput('Status: queued')
+            ->assertExitCode(0)
+            ->run();
+
+        //@todo use randomized test data
+        //@todo test mapping of input data by reading console output
+        //@todo use ID to retrieve created mail using mail:get command
+        //@todo advanced: use test email accounts as recipients and actually check if email arrived
     }
 }

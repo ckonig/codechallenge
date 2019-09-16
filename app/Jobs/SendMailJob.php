@@ -44,7 +44,7 @@ class SendMailJob implements ShouldQueue
             $this->mail->status = 'retry';
             $this->mail->save();
             $delay = pow(2, ($this->mail->attempt + 1));
-            Log::warn($prefix . ' failed to send using AggregateMailer. requeueing with ' . $delay . 's delay');
+            Log::warning($prefix . ' failed to send using AggregateMailer. requeueing with ' . $delay . 's delay');
             SendMailJob::dispatch($this->mail)->onConnection('database')->delay(now()->addSeconds($delay));
         }
     }

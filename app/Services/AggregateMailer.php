@@ -22,10 +22,10 @@ class AggregateMailer
                     if ($success) {
                         Log::info('sent email successfully using ' . $mailer->name);
                     } else {
-                        Log::warn('sending email NOT successful using ' . $mailer->name);
+                        Log::warning('sending email NOT successful using ' . $mailer->name);
                     }
                 } catch (\Exception $ex) {
-                    Log::warn('Sending email not successful using ' . $mailer->name . ', caught exception: ' . $ex->getMessage());
+                    Log::warning('Sending email not successful using ' . $mailer->name . ', caught exception: ' . $ex->getMessage());
                 }
             }
         }
