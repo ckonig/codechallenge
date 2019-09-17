@@ -10,6 +10,11 @@ use Log;
 
 class MailFrontendService
 {
+    public function __construct(SendMailQueueService $queue, SendMailCacheService $cache) {
+        $this->queue = $queue;
+        $this->cache = $cache;
+    }
+
     public function processMailRequest(string $fromName, string $fromEmail, string $title, array $recipients, string $txt, string $html)
     {
         $mail = new MailModel();
@@ -23,11 +28,8 @@ class MailFrontendService
         $guid = $this->GUID();
         $mail->id = $guid;
 
-        Cache::store('redis')->put($mail->id, $mail, 600);
-
-        SendMailJob::dispatch(new MailRequest($mail->id))
-            ->onConnection('redis')
-            ->delay(now()->addSeconds(1));
+        $this->cache->insertOrUpdate($mail);
+        $this->queue->dispatchMailRequest($mail);
 
         Log::info('Dispatched mail with ID ' . $mail->id . ' to queue');
 

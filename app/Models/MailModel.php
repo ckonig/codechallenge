@@ -11,4 +11,5 @@ class MailModel
     public $body_txt;
     public $body_html;
     public $attempt = 0;
+    public $status;
 }

@@ -63,10 +63,12 @@ The mySQL database is now only used as a dead letter queue.
 
 The requirements state that the service should be horizontally scalable. In the current solution there are limitations for that.
 
-- The queue and data storage are running on Redis, which can be transformed into a Redis cluster for higher load.
-- Laravel Horizon is used to run multiple queue workers inside one container. The worker is run inside a php-worker container, which can also be scaled up. It remains to be researched if this potentially leads to double processing of entities!
-- The web/api application is exposed through the traefik load balancer, which will delegate the requests to the nginx instances in a round-robin approach. However all nginx instances appear to be using the same php-fpm instance. This needs further investigation!
+- The queue and data storage are running on Redis, which can be later replaced with an (external) Redis cluster for high performance scenarios.
+- Laravel Horizon is used to run multiple queue workers inside one container. Horizon is started and supervised by the php-worker container, which can also be scaled up.
+- The web/api application is exposed through the traefik load balancer, which will delegate the requests to the nginx instances in a round-robin approach. In a production scenario, an external load balancing service for dynamic traffic and a CDN for static content would be preferrable.
+- If multiple instances of php-fpm are running, the balancing of the incoming traffic from nginx happens automatically.
 - The Laradock template I started with is based on using docker-compose. But this can only deploy the containers on one host. To deploy this app in a cluster that spans multiple hosts, the .env file needs to be converted into something ```docker stack``` can understand. Otherwise the scalability stays limited to one host machine.
+- mySQL is used as data storage for the dead letter queue. Under high load, this single-instance database can become a bottleneck as well, and an external, more scalable solution would be more suitable.
 
 ## Setup
 
@@ -90,6 +92,26 @@ php artisan migrate:fresh
 yarn install
 npm install --global cross-env
 yarn run dev
+```
+
+## Configure
+
+Open .env file and edit the settings at the bottom.
+
+```.env
+MAILJET_APIKEY="your key"
+MAILJET_APISECRET="your secret"
+SENDGRID_API_KEY="your key"
+```
+
+Scale up
+
+```cli
+docker-compose up -d
+    --scale php-worker=4
+    --scale php-fpm=4
+    --scale nginx=4
+    nginx traefik mysql redis php-fpm php-worker
 ```
 
 ## Use
