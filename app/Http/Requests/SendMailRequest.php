@@ -23,4 +23,9 @@ class SendMailRequest extends FormRequest
             'to.*' => 'required|email',
         ];
     }
+
+    public function messages()
+    {
+        return ['to.*.email' => '"{value}" is not a valid email address. '];
+    }
 }

@@ -19,7 +19,7 @@ class SendMail extends Command
 
     public function handle(MailFrontendService $service)
     {
-        //@todo how to test the completeness of the mapping of the arguments?
+        //@todo Unit Test to ensure the completeness of the mapping of the arguments
 
         $mail = $service->processMailRequest(
             $this->argument('fromName'),

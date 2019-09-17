@@ -23,7 +23,7 @@ class SendMailConsoleTest extends TestCase
             ->run();
 
         //@todo use randomized test data
-        //@todo test mapping of input data by reading console output
+        //@todo test mapping of input data by reading console output (how?)
         //@todo use ID to retrieve created mail using mail:get command
         //@todo advanced: use test email accounts as recipients and actually check if email arrived
     }

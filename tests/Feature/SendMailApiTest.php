@@ -45,7 +45,6 @@ class SendMailApiTest extends TestCase
         $this->assertEquals($body['fromEmail'], $getcontent2->fromEmail);
         $this->assertEquals($body['title'], $getcontent2->title);
 
-        //@todo this manual decoding looks wrong
         $this->assertEquals($body['body_txt'], $getcontent2->body_txt);
         $this->assertEquals($body['body_html'], $getcontent2->body_html);
 

@@ -111,6 +111,4 @@ class SendMailJobTest extends TestCase
 
         $this->assertTrue($thrown);
     }
-
-    //@todo test increase of queue delay
 }

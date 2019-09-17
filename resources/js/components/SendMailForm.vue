@@ -56,7 +56,7 @@
               v-model="to"
               type="text"
             />
-            <div v-if="errors.to" class="invalid-feedback">{{errors.to.join(' ')}}</div>
+            <div v-if="errors.to" class="invalid-feedback">{{errors.to}}</div>
           </div>
         </div>
       </div>
@@ -136,7 +136,7 @@ export default {
       return store.getters.draft.isLoading;
     },
     showForm() {
-        //@todo separate concerns, use route navigation
+        //@todo the form should not know about this separate concern, use route navigation instead
         return !store.getters.getActiveMail;
     }
   },
@@ -150,6 +150,7 @@ export default {
       this.to = "";
       this.body_txt = "";
       this.body_html = "";
+      store.dispatch("resetDraft", {});
     },
     sendMail: function() {
       store.dispatch("sendDraft", { draft: { ...this } });
