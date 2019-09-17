@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Sendgrid;
 
 use App\Models\MailModel;
 

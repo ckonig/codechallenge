@@ -169,3 +169,12 @@ Open <https://localhost/horizon> to use Horizon which allows monitoring of the w
 ### Automated tests
 
 Connect to the bash of the workspace container using ``docker-compose exec workspace bash``, then run ```phpunit```.
+
+### Add mailer implementations
+
+To add a new mail service (e.g. mailgun) to the application:
+
+- Implement the Interface ``App\Services\Mailer`` in a class ``MailgunMailer`` under namespace ``App\Services\Mailgun\``.
+  - Make sure the implementation of ``sendMail`` accepts an instance of ``App\Model\MailModel``, converts it into the appropriate data structure and sends it to the mailgun API. It returns true or false based on the response.
+  - The implementation of ``sendMail`` is allowed to throw Exceptions.
+- Add the Mailer implementation to the dependency binding in ``App\Providers\AppServiceProvider``.

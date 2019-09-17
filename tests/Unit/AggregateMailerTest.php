@@ -4,8 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\MailModel;
 use App\Services\AggregateMailer;
-use App\Services\MailjetMailer;
-use App\Services\SendgridMailer;
+use App\Services\Mailer;
 use Mockery;
 use Tests\TestCase;
 
@@ -13,63 +12,66 @@ class AggregateMailerTest extends TestCase
 {
     public function testAggregateMailerReturnsFalseIfAllMailersDontWork()
     {
-        $mailjet = $this->getMailjetMailer(function ($mock) {
+        $a = $this->getMockMailer(function ($mock) {
             $mock->shouldReceive(['sendMail' => false])->once();
+            $mock->shouldReceive(['getName' => 'a']);
         });
-        $sendgrid = $this->getSendgridMailer(function ($mock) {
+        $b = $this->getMockMailer(function ($mock) {
             $mock->shouldReceive(['sendMail' => false])->once();
+            $mock->shouldReceive(['getName' => 'b']);
         });
-        $aggregateMailer = new AggregateMailer($mailjet, $sendgrid);
+        $aggregateMailer = new AggregateMailer([$a, $b]);
         $result = $aggregateMailer->sendMail(new MailModel());
         $this->assertFalse($result);
     }
 
     public function testAggregateMailerReturnsTrueIfMailjetMailerWorks()
     {
-        $mailjet = $this->getMailjetMailer(function ($mock) {
+        $a = $this->getMockMailer(function ($mock) {
             $mock->shouldReceive(['sendMail' => true]);
+            $mock->shouldReceive(['getName' => 'a']);
         });
-        $sendgrid = $this->getSendgridMailer(function ($mock) {
+        $b = $this->getMockMailer(function ($mock) {
             $mock->shouldReceive(['sendMail' => false]);
+            $mock->shouldReceive(['getName' => 'b']);
         });
-        $aggregateMailer = new AggregateMailer($mailjet, $sendgrid);
+        $aggregateMailer = new AggregateMailer([$a, $b]);
         $result = $aggregateMailer->sendMail(new MailModel());
         $this->assertTrue($result);
     }
 
     public function testAggregateMailerReturnsTrueIfSendgridMailerWorks()
     {
-        $mailjet = $this->getMailjetMailer(function ($mock) {
+        $a = $this->getMockMailer(function ($mock) {
             $mock->shouldReceive(['sendMail' => false]);
+            $mock->shouldReceive(['getName' => 'a']);
         });
-        $sendgrid = $this->getSendgridMailer(function ($mock) {
+        $b = $this->getMockMailer(function ($mock) {
             $mock->shouldReceive(['sendMail' => true]);
+            $mock->shouldReceive(['getName' => 'b']);
         });
-        $aggregateMailer = new AggregateMailer($mailjet, $sendgrid);
+        $aggregateMailer = new AggregateMailer([$a, $b]);
         $result = $aggregateMailer->sendMail(new MailModel());
         $this->assertTrue($result);
     }
 
     public function testAggregateMailerReturnFalseIfBothMailersThrowExceptions()
     {
-        $mailjet = $this->getMailjetMailer(function ($mock) {
+        $a = $this->getMockMailer(function ($mock) {
             $mock->shouldReceive('sendMail')->andThrow('Exception');
+            $mock->shouldReceive(['getName' => 'a']);
         });
-        $sendgrid = $this->getSendgridMailer(function ($mock) {
+        $b = $this->getMockMailer(function ($mock) {
             $mock->shouldReceive('sendMail')->andThrow('Exception');
+            $mock->shouldReceive(['getName' => 'b']);
         });
-        $aggregateMailer = new AggregateMailer($mailjet, $sendgrid);
+        $aggregateMailer = new AggregateMailer([$a, $b]);
         $result = $aggregateMailer->sendMail(new MailModel());
         $this->assertFalse($result);
     }
 
-    private function getMailjetMailer($func)
+    private function getMockMailer($func)
     {
-        return $this->instance(MailjetMailer::class, Mockery::mock(MailjetMailer::class, $func));
-    }
-
-    private function getSendgridMailer($func)
-    {
-        return $this->instance(SendgridMailer::class, Mockery::mock(SendgridMailer::class, $func));
+        return $this->instance('Mailer', Mockery::mock('Mailer', $func));
     }
 }

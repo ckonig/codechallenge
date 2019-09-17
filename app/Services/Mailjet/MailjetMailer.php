@@ -1,15 +1,19 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Mailjet;
 
 use App\Models\MailModel;
+use App\Services\Mailer;
+use Log;
 use Mailjet\LaravelMailjet\Facades\Mailjet;
 use Mailjet\Resources;
-use Log;
 
-class MailjetMailer
+class MailjetMailer implements Mailer
 {
-    public $name = 'Mailjet';
+    public function getName()
+    {
+        return 'Mailjet';
+    }
 
     public function __construct(MailjetMessageBuilder $builder)
     {

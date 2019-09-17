@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Services\SendgridMessageBuilder;
+use App\Services\Sendgrid\SendgridMessageBuilder;
 use Tests\TestCase;
 
 class SendgridMessageBuilderTest extends TestCase

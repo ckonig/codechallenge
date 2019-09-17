@@ -28,7 +28,7 @@ class SendMailJobTest extends TestCase
         }));
         $sendMailCacheService = $this->instance(SendMailCacheService::class, Mockery::mock(SendMailCacheService::class, function ($mock) use ($id, $mail) {
             $mock->shouldReceive(['retrieve' => $id])->andReturn($mail)->once();
-            $mock->shouldReceive(['insertOrUpdate' => $mail])->withArgs(function($entity) { return $entity->status == 'sent';})->once();
+            $mock->shouldReceive(['insertOrUpdate' => $mail])->withArgs(function ($entity) {return $entity->status == 'sent';})->once();
         }));
         $sendMailQueueService = $this->instance(SendMailQueueService::class, Mockery::mock(SendMailQueueService::class, function ($mock) {
             $mock->shouldReceive(['dispatchMailRequest'])->never();
@@ -38,28 +38,45 @@ class SendMailJobTest extends TestCase
     }
 
     /**
-     * Test that a mail enqueued again if sending doesn't work and it's the first attempt
+     * Test that a mail is enqueued again if sending doesn't work and the delay increases exponentially each time
      */
     public function testRetryCase()
     {
         $mail = TestData::getMail();
-        $request = new MailRequest($mail);
+
         $id = 'foo-bar-2';
-        $request->id = $id;
-        $job = new SendMailJob($request);
 
         $aggregateMailer = $this->instance(AggregateMailer::class, Mockery::mock(AggregateMailer::class, function ($mock) use ($mail) {
-            $mock->shouldReceive(['sendMail' => 1])->with($mail)->andReturn(false)->once();
+            $mock->shouldReceive(['sendMail' => 1])->with($mail)->andReturn(false)->times(3);
         }));
         $sendMailCacheService = $this->instance(SendMailCacheService::class, Mockery::mock(SendMailCacheService::class, function ($mock) use ($id, $mail) {
-            $mock->shouldReceive(['retrieve' => $id])->andReturn($mail)->once();
-            $mock->shouldReceive(['insertOrUpdate' => $mail])->withArgs(function($entity) { return $entity->status == 'retry';})->once();
+            $mock->shouldReceive(['retrieve' => $id])->andReturn($mail)->times(3);
+            $mock->shouldReceive(['insertOrUpdate' => $mail])->withArgs(function ($mail, $ttl) {return $mail->attempt == 1 && $mail->status == 'retry' && $ttl == 4;})->once();
+            $mock->shouldReceive(['insertOrUpdate' => $mail])->withArgs(function ($mail, $ttl) {return $mail->attempt == 2 && $mail->status == 'retry' && $ttl == 8;})->once();
+            $mock->shouldReceive(['insertOrUpdate' => $mail])->withArgs(function ($mail, $ttl) {return $mail->attempt == 3 && $mail->status == 'retry' && $ttl == 16;})->once();
         }));
         $sendMailQueueService = $this->instance(SendMailQueueService::class, Mockery::mock(SendMailQueueService::class, function ($mock) {
-            $mock->shouldReceive(['dispatchMailRequest' => null])->once();
+            $mock->shouldReceive(['dispatchMailRequest' => null])->withArgs(function ($mail, $ttl) {return $mail->attempt == 1 && $ttl == 4;})->once();
+            $mock->shouldReceive(['dispatchMailRequest' => null])->withArgs(function ($mail, $ttl) {return $mail->attempt == 2 && $ttl == 8;})->once();
+            $mock->shouldReceive(['dispatchMailRequest' => null])->withArgs(function ($mail, $ttl) {return $mail->attempt == 3 && $ttl == 16;})->once();
         }));
 
-        $result = $job->handle($aggregateMailer, $sendMailCacheService, $sendMailQueueService);
+        $request1 = new MailRequest($mail);
+        $request1->id = $id;
+        $job = new SendMailJob($request1);
+        $job->handle($aggregateMailer, $sendMailCacheService, $sendMailQueueService);
+
+        $mail->attempt = 1;
+        $request2 = new MailRequest($mail);
+        $request2->id = $id;
+        $job = new SendMailJob($request2);
+        $job->handle($aggregateMailer, $sendMailCacheService, $sendMailQueueService);
+
+        $mail->attempt = 2;
+        $request3 = new MailRequest($mail);
+        $request3->id = $id;
+        $job = new SendMailJob($request3);
+        $job->handle($aggregateMailer, $sendMailCacheService, $sendMailQueueService);
     }
 
     /**
@@ -79,7 +96,7 @@ class SendMailJobTest extends TestCase
         }));
         $sendMailCacheService = $this->instance(SendMailCacheService::class, Mockery::mock(SendMailCacheService::class, function ($mock) use ($id, $mail) {
             $mock->shouldReceive(['retrieve' => $id])->andReturn($mail)->once();
-            $mock->shouldReceive(['insertOrUpdate' => $mail])->withArgs(function($entity) { return $entity->status == 'cancelled';})->once();
+            $mock->shouldReceive(['insertOrUpdate' => $mail])->withArgs(function ($entity) {return $entity->status == 'cancelled';})->once();
         }));
         $sendMailQueueService = $this->instance(SendMailQueueService::class, Mockery::mock(SendMailQueueService::class, function ($mock) {
             $mock->shouldReceive(['dispatchMailRequest' => null])->never();

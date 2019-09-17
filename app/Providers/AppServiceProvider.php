@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\AggregateMailer;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +14,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // Register the different Mail Services used by AggregateMailer
+        $mailers = [
+            'MailjetMailer',
+            'SendgridMailer',
+        ];
+        $this->app->tag($mailers, 'mailers');
+        $this->app->bind('App\Services\Mailer', function ($app) {
+            return new AggregateMailer($app->tagged('mailers'));
+        });
     }
 
     /**

@@ -1,13 +1,17 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Sendgrid;
 
 use App\Models\MailModel;
+use App\Services\Mailer;
 use Log;
 
-class SendgridMailer
+class SendgridMailer implements Mailer
 {
-    public $name = 'Sendgrid';
+    public function getName()
+    {
+        return 'Sendgrid';
+    }
 
     public function __construct(SendgridMessageBuilder $builder)
     {

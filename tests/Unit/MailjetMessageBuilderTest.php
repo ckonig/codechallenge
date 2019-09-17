@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Services\MailjetMessageBuilder;
+use App\Services\Mailjet\MailjetMessageBuilder;
 use Tests\TestCase;
 
 class MailjetMessageBuilderTest extends TestCase

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Mailjet;
 
 use App\Models\MailModel;
 

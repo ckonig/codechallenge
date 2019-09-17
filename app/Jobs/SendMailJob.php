@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\MailRequest;
-use App\Services\AggregateMailer;
+use App\Services\Mailer;
 use App\Services\SendMailCacheService;
 use App\Services\SendMailQueueService;
 use Exception;
@@ -25,7 +25,7 @@ class SendMailJob implements ShouldQueue
         $this->mailRequest = $mail;
     }
 
-    public function handle(AggregateMailer $mailer, SendMailCacheService $cache, SendMailQueueService $queue)
+    public function handle(Mailer $mailer, SendMailCacheService $cache, SendMailQueueService $queue)
     {
         $retries = env('QUEUE_RETRIES', 3);
         $mail = $cache->retrieve($this->mailRequest->id);

@@ -5,11 +5,16 @@ namespace App\Services;
 use App\Models\MailModel;
 use Log;
 
-class AggregateMailer
+class AggregateMailer implements Mailer
 {
-    public function __construct(MailjetMailer $mailjet, SendgridMailer $sendgrid)
+    public function __construct(array $mailers)
     {
-        $this->mailers = [$mailjet, $sendgrid];
+        $this->mailers = $mailers;
+    }
+
+    public function getName()
+    {
+        return 'Aggregate';
     }
 
     public function sendMail(MailModel $mail)
@@ -20,12 +25,12 @@ class AggregateMailer
                 try {
                     $success = $mailer->sendMail($mail);
                     if ($success) {
-                        Log::debug('sent email successfully using ' . $mailer->name);
+                        Log::debug('sent email successfully using ' . $mailer->getName());
                     } else {
-                        Log::warning('sending email NOT successful using ' . $mailer->name);
+                        Log::warning('sending email NOT successful using ' . $mailer->getName());
                     }
                 } catch (\Exception $ex) {
-                    Log::warning('Sending email not successful using ' . $mailer->name . ', caught exception: ' . $ex->getMessage());
+                    Log::warning('Sending email not successful using ' . $mailer->getName() . ', caught exception: ' . $ex->getMessage());
                 }
             }
         }
