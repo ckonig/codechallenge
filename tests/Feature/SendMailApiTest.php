@@ -48,7 +48,7 @@ class SendMailApiTest extends TestCase
         $this->assertEquals($body['body_txt'], $getcontent2->body_txt);
         $this->assertEquals($body['body_html'], $getcontent2->body_html);
 
-        $getresponse3 = $this->json('GET', '/api/mail/' . $id . '/status');
+        $getresponse3 = $this->json('GET', '/api/mail/' . $id);
         $getresponse3->assertStatus(200);
         $getcontent3 = json_decode($getresponse3->getContent());
         $this->assertEquals('sent', $getcontent3->status);

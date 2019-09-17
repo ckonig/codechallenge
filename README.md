@@ -2,8 +2,7 @@
 
 ## Table of Contents
 
-1. [todo](#todo)
-1. [Important Issues](#important-issues)
+1. [Possible Improvements](#possible-improvements)
 1. [Choices and Revisions](#choices-and-revisions)
    1. [Laravel / Laradock](#laravel-/-laradock)
    1. [MailJet & Sendgrid connectors](#mailjet-&-sendgrid-connectors)
@@ -17,24 +16,21 @@
    1. [JSON API (via Postman)](#json-api-(via-postman))
 1. [Develop](#develop)
 
-## todo
+## Possible Improvements
 
-- [ ] after sending email, auto-refresh status of email (push instead of pull)
-- [ ] dont forget frontend testing (component based and UI)
-- [ ] bonus: implement mail detail view using routing
-- [ ] Architectural review & critique
-
-## Important Issues
-
-- Find out how to deal with environment config and secrets. It's unacceptable to keep secrets under version control.
+- After sending an email, the UI should auto-refresh the status of the email. This would replace the "refresh" button. Potentially this can be implemented using the laravel broadcast feature.
+- The application has no UI tests yet, neither component based nor end-to-end. I tried setting up Laravel Dusk, but couldn't find a way to make ChromeDriver accept the self-signed certificate.
+- The UI application could use URL routing to separate the different views from each other.
+- Currently the secrets are stored in the repository, which should definitely not be the case in a production setup.
+- The automated tests could use an actual test email account, and check if the email has arrived as a more complete end-to-end validation.
 
 ## Choices and Revisions
 
 ### Laravel / Laradock
 
 I chose to use Laravel framework, because it's a good real-world way to learn working with this framework.  
-Using Laradock as an out-of-the-box solution combining Docker and Laravel seemed like a great time-saver to get started.
 
+Using Laradock as an out-of-the-box solution combining Docker and Laravel seemed like a great time-saver to get started.
 Eventually, much of laradock's overhead was removed, and the app was reduced to its necessary dependencies and configurations.
 
 ### MailJet & Sendgrid connectors
@@ -61,7 +57,7 @@ The mySQL database is now only used as a dead letter queue.
 
 ## Scalability
 
-The requirements state that the service should be horizontally scalable. In the current solution there are limitations for that.
+The requirements state that the service should be horizontally scalable, which to some extent is possible with this solution, considering the following:
 
 - The queue and data storage are running on Redis, which can be later replaced with an (external) Redis cluster for high performance scenarios.
 - Laravel Horizon is used to run multiple queue workers inside one container. Horizon is started and supervised by the php-worker container, which can also be scaled up.
@@ -141,7 +137,6 @@ Following requests can be made with this collection:
 
 - POST /api/mail (to send an email defined in the request body)
 - GET /api/mail/{id} (to retrieve the previously created email)
-- GET /api/mail/{id}/status (to retrieve the status of the previously created email)
 
 ## Develop
 

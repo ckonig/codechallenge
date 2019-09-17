@@ -118,68 +118,6 @@
 				}
 			},
 			"response": []
-		},
-		{
-			"name": "localhost/api/mail/{id}/status",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "118e78f0-cb67-4fb0-bc97-b78bdd8af4ae",
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "42d9cc2b-0fc1-4b3c-b160-ad517f149c8d",
-						"exec": [
-							"",
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"",
-							"pm.test(\"ID is same as in URL\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.id).to.eql(pm.globals.get(\"mailid\"));",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					},
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "localhost/api/mail/{{mailid}}/status",
-					"host": [
-						"localhost"
-					],
-					"path": [
-						"api",
-						"mail",
-						"{{mailid}}",
-						"status"
-					]
-				}
-			},
-			"response": []
 		}
 	]
 }
