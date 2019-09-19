@@ -222,7 +222,7 @@ services:
       - backend
     labels:
       - traefik.backend=nginx
-      - traefik.frontend.rule=Host:localhost
+      - traefik.frontend.rule=Host:mailaway.test
       - traefik.port=80
       - traefik.enable=true
 
@@ -278,8 +278,8 @@ services:
       - backend
     labels:
       - traefik.backend=traefik
-      - traefik.frontend.rule=Host:localhost
-      - traefik.port=8080
+      - traefik.frontend.rule=Host:mailaway.test
+      - traefik.port=8070
       - traefik.enable=true
 
 ### Redis ################################################
