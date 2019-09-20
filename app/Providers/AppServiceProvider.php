@@ -14,14 +14,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Register the different Mail Services used by AggregateMailer
-        $mailers = [
-            'MailjetMailer',
-            'SendgridMailer',
-        ];
-        $this->app->tag($mailers, 'mailers');
         $this->app->bind('App\Services\Mailer', function ($app) {
-            return new AggregateMailer($app->tagged('mailers'));
+            return new AggregateMailer(
+                [
+                    $app->make('App\Services\Mailjet\MailjetMailer'),
+                    $app->make('App\Services\Sendgrid\SendgridMailer')
+                ]
+            );
         });
     }
 
