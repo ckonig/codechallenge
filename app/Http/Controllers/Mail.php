@@ -23,8 +23,7 @@ class Mail extends Controller
             $request->input('body_html')
         );
 
-        // @todo use proper HTTP status code 201
-        return response()->json(['status' => $mail->status, 'id' => $mail->id]);
+        return response()->json(['status' => $mail->status, 'id' => $mail->id], 201);
     }
 
     public function getMail(string $id)

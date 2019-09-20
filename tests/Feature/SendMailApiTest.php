@@ -21,7 +21,7 @@ class SendMailApiTest extends TestCase
     {
         $body = $this->data;
         $postresponse = $this->json('POST', '/api/mail', $body);
-        $postresponse->assertStatus(200);
+        $postresponse->assertStatus(201);
         $postcontent = json_decode($postresponse->getContent());
         $id = $postcontent->id;
         $status = $postcontent->status;
