@@ -6,16 +6,20 @@ use Tests\TestCase;
 
 class SendMailApiTest extends TestCase
 {
-    private $data = [
-        'title' => 'Sent from Feature test via Mailaway',
-        'body_txt' => 'You have received an email from the Mailaway service',
-        'body_html' => '<h1> YAY </h1> Mailaway works fine',
-        'fromName' => 'Mailaway Service',
-        'fromEmail' => 'noreply@mailaway.com',
-        'to' => [
-            'itckoenig@gmail.com',
-        ],
-    ];
+    public function setUp() : void
+    {
+        parent::setUp();
+        $this->data = [
+            'title' => 'Sent from Feature test via Mailaway',
+            'body_txt' => 'You have received an email from the Mailaway service',
+            'body_html' => '<h1> YAY </h1> Mailaway works fine',
+            'fromName' => 'Mailaway API Test',
+            'fromEmail' => env('TEST_SENDER'),
+            'to' => [
+                env('TEST_RECEIVER'),
+            ],
+        ];
+    }
 
     public function testHappyFlow()
     {

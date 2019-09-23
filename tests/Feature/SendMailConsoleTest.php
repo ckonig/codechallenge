@@ -9,12 +9,12 @@ class SendMailConsoleTest extends TestCase
     public function testConsole()
     {
         $payload = [
-            'fromName' => 'Christian',
-            'fromEmail' => "itckoenig@gmail.com",
-            'title' => "Console Stuff",
-            'txt' => "Hooraay",
-            'html' => "<h1> Hooraaay</h1>",
-            'toEmail' => ['itckoenig@gmail.com'],
+            'fromName' => 'Mailaway Console Test',
+            'fromEmail' => env('TEST_SENDER'),
+            'title' => 'Console Stuff',
+            'txt' => 'This is a test email',
+            'html' => '<h1>Test</h1><p>This is a test email</p>',
+            'toEmail' => [env('TEST_RECEIVER')],
         ];
         $this->artisan('mail:send', $payload)
             ->expectsOutput('Created Mail.')
