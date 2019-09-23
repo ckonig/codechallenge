@@ -20,37 +20,44 @@
 ## Setup
 
 
-Get sources
+### Get sources
 ```cli
 git clone https://github.com/ckonig/codechallenge
 cd codechallenge
 ```
 
-Start container
+### Start container
 
 ```cli
 cd laradock
 docker-compose up -d
 ```
 
-Connect to workspace container and install dependencies
+### Connect to workspace container and install dependencies
 
 ```cli
 docker-compose exec workspace bash
 composer install
 ```
 
-Create database
+After running ``composer install``, the php-worker container needs to be restarted.
+
+```cli
+exit
+docker-compose restart php-worker
+docker-compose exec workspace bash
+```
+
+### Create database
 
 ```cli
 php artisan migrate:fresh
 ```
 
-Install npm dependencies & build UI
+### Install npm dependencies & build UI
 
 ```cli
 yarn install
-npm install --global cross-env
 yarn run dev
 ```
 
