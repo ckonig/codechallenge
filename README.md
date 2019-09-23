@@ -69,6 +69,8 @@ Open .env file and edit the settings at the bottom.
 MAILJET_APIKEY="your key"
 MAILJET_APISECRET="your secret"
 SENDGRID_API_KEY="your key"
+TEST_SENDER="your email"
+TEST_RECEIVER="your email"
 ```
 
 ## Use
