@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "04cb4038-5dd2-4cb2-aa13-5471c7b41573",
+		"_postman_id": "70209bda-b68b-4783-9053-e83a8c0c65f7",
 		"name": "CodeChallenge",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -42,10 +42,11 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"title\": \"Sent from Postman via Mailaway\",\n\t\"body_txt\": \"You have received an email from the Mailaway service\",\n\t\"body_html\": \"<h1> YAY </h1> Mailaway works fine\",\n\t\"from\" : {\n\t\t\"name\": \"Mailaway Service\",\n\t\t\"email\": \"itckoenig@gmail.com\"\n\t},\n\t\"to\": [\n\t\t\"itckoenig@gmail.com\"\n\t]\n}"
+					"raw": "{\n\t\"title\": \"Sent from Postman via Mailaway\",\n\t\"body_txt\": \"You have received an email from the Mailaway service\",\n\t\"body_html\": \"<h1> YAY </h1> Mailaway works fine\",\n\t\"fromName\": \"Mailaway Service\",\n\t\"fromEmail\": \"itckoenig@gmail.com\",\n\t\"to\": [\n\t\t\"itckoenig@gmail.com\"\n\t]\n}"
 				},
 				"url": {
-					"raw": "localhost/api/mail",
+					"raw": "https://localhost/api/mail",
+					"protocol": "https",
 					"host": [
 						"localhost"
 					],
@@ -106,7 +107,8 @@
 					}
 				],
 				"url": {
-					"raw": "localhost/api/mail/{{mailid}}",
+					"raw": "https://localhost/api/mail/{{mailid}}",
+					"protocol": "https",
 					"host": [
 						"localhost"
 					],
@@ -119,5 +121,6 @@
 			},
 			"response": []
 		}
-	]
+	],
+	"protocolProfileBehavior": {}
 }
