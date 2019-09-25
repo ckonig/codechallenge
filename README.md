@@ -40,14 +40,6 @@ docker-compose exec workspace bash
 composer install
 ```
 
-After running ``composer install``, the php-worker container needs to be restarted.
-
-```cli
-exit
-docker-compose restart php-worker
-docker-compose exec workspace bash
-```
-
 ### Create database
 
 ```cli
@@ -66,11 +58,19 @@ yarn run dev
 Open .env file and edit the settings at the bottom.
 
 ```.env
-MAILJET_APIKEY="your key"
-MAILJET_APISECRET="your secret"
-SENDGRID_API_KEY="your key"
-TEST_SENDER="your email"
-TEST_RECEIVER="your email"
+MAILJET_APIKEY=REPLACE_WITH_REAL_KEY
+MAILJET_APISECRET=REPLACE_WITH_REAL_SECRET
+SENDGRID_API_KEY=REPLACE_WITH_REAL_KEY
+TEST_SENDER=REPLACE_WITH_SENDER_EMAIL_FOR_TESTS
+TEST_RECEIVER=REPLACE_WITH_RECEIVER_EMAIL_FOR_TESTS
+```
+
+After updating the .env file, the php-worker container needs to be restarted.
+
+```cli
+exit
+docker-compose restart php-worker
+docker-compose exec workspace bash
 ```
 
 ## Use
