@@ -6,21 +6,21 @@
 1. [Use](#use)
    1. [Web UI](#web-ui)
    1. [Console](#console)
-   1. [JSON API (via Postman)](#json-api-(via-postman))
+   1. [JSON API via Postman](#json-api-via-postman)
 1. [Develop](#develop)
 1. [Scalability](#scalability)
 1. [Possible Improvements](#possible-improvements)
 1. [Choices and Revisions](#choices-and-revisions)
-   1. [Laravel / Laradock](#laravel-/-laradock)
+   1. [Laravel and Laradock](#laravel-and-laradock)
    1. [Mail API connectors](#mail-api-connectors)
    1. [CLI commands](#cli-commands)
-   1. [Queue & Data Storage](#queue-&-data-storage)
+   1. [Queue and Data Storage](#queue-and-data-storage)
    1. [UI test plan](#ui-test-plan)
 
 ## Setup
 
-
 ### Get sources
+
 ```cli
 git clone https://github.com/ckonig/codechallenge
 cd codechallenge
@@ -103,7 +103,7 @@ php artisan mail:get {id}
 
 Connect to the bash of the workspace container using ``docker-compose exec workspace bash``, then run ```phpunit```.
 
-### JSON API (via Postman)
+### JSON API via Postman
 
 There is a Postman collection in this repository (root/postman) that can be used to test the JSON API manually using the following requests:
 
@@ -122,7 +122,7 @@ yarn run watch-poll
 
 ### Data Access
 
-Open <http://localhost:9987> to use Redis WebUI which gives access to data stored in queue and cache. Find the appropriate login data in laradock/.env file. 
+Open <http://localhost:9987> to use Redis WebUI which gives access to data stored in queue and cache. Find the appropriate login data in laradock/.env file.
 
 Open <http://localhost:8080> to use phpmyadmin to access the dead letter queue. Find the appropriate login data in laradock/.env file. 
 
@@ -167,7 +167,7 @@ docker-compose up -d
 
 It's clear that no piece of software is ever "100% done", unless we're talking about mathematically specified requirements. I've done my best to interpret the requirements and deliver a solution that "makes sense" in its context. Some things had to be deprioritized, as they would've taken too much time to implement, other things were not done because they weren't stated explicitly as requirements. 
 
-As a result, this application is by no means "ready for production", and here are some bullet points that would need to be picked up if the development would continue. 
+As a result, this application is by no means "ready for production", and here are some bullet points that would need to be picked up if the development would continue.
 
 - After sending an email, the UI should auto-refresh the status of the email. This would replace the "refresh" button. Potentially this can be implemented using the laravel broadcast feature.
 - The UI application could use URL routing to separate the different views from each other. This would make it easier to extend the UI later on.
@@ -177,10 +177,9 @@ As a result, this application is by no means "ready for production", and here ar
 - The automated tests for the console application are rather minimalistic. It would be more useful if the console output would be read by the test program, so that a newly created email could be found back and the status transition from "queued" to "sent" could be asserted. 
 - The application has no UI tests yet, neither component based nor end-to-end. To reach a production-ready maturity of the application, UI tests are necessary. The [UI test plan](#ui-test-plan) indicates how those tests would look like.
 
-
 ## Choices and Revisions
 
-### Laravel / Laradock
+### Laravel and Laradock
 
 The Laravel framework was chosen, because it's a good real-world way to learn working with this framework.  
 
@@ -199,7 +198,7 @@ I wasn't familiar with Artisan before, so in the initial planning I was unsure h
 
 This turned out to be beneficial since Artisan console commands are integrated very well in Laravel, which allowed easy customization of the command and even integration testing (with some limitations).
 
-### Queue & Data Storage
+### Queue and Data Storage
 
 There is a data storage to save the emails, which makes it possible to track the status of the email, which is processed asynchronously.
 
@@ -213,9 +212,10 @@ The mySQL database is now only used as a dead letter queue.
 
 I tried setting up unit tests for the UI components using Jest and I also tried setting up integration tests using Laravel Dusk, however the setups turned out to be much more tricky than expected and to make it work I would have to spend more time than reasonable. 
 
-In a real-world situation I would search internal repositories for existing solutions and talk to colleagues to ask for help. In this artifical code-challenge situation I set myself a timeframe to not lose myself in endless research and experimentation. So at the end of the day, instead of actually writing the tests, I decided to write a test plan instead, which describes the kind of tests I would have written, had I managed to setup the UI test platform in time. 
+In a real-world situation I would search internal repositories for existing solutions and talk to colleagues to ask for help. In this artifical code-challenge situation I set myself a timeframe to not lose myself in endless research and experimentation. So at the end of the day, instead of actually writing the tests, I decided to write a test plan instead, which describes the kind of tests I would have written, had I managed to setup the UI test platform in time.
 
 #### Input composition and validation
+
 - navigate to UI
 - assert basic elements are present: header, search input field & button, form input elements, buttons for sending and resetting form
 - try to send form without any input, assert error messages show up
@@ -225,21 +225,22 @@ In a real-world situation I would search internal repositories for existing solu
 - add an invalid email address, try to send form, assert that the invalid address is not accepted
 
 #### Sending emails
+
 - fill in form completely with valid data and submit
-  - assert the success message shows up 
-  - assert the box on the right hand of the screen shows up with status "queued" 
+  - assert the success message shows up
+  - assert the box on the right hand of the screen shows up with status "queued"
   - extract the ID of the message from the box
 - click the "refresh" button, assert the status changed from "queued" to "sent"
-- fill in form again and send a second email. 
+- fill in form again and send a second email.
   - assert there are now two boxes showing the two sent emails, one with status "sent" and one with status "quued"
   - extract and save the ID of the second email
   - click "refresh" button of second email, assert status changed to "sent"
 
 #### Searching and showing Emails
+
 - refresh the page
-- search for first ID, make sure it shows up with ID and status "sent" 
+- search for first ID, make sure it shows up with ID and status "sent"
 - search for second ID, make sure both emails are shown
 - click the "show" button of first email, assert the form disappears, and details of the first mail are shown
 - click the "show" button of second email, and details of the second mail are shown
 - close the detail view, assert the form is shown again
-
