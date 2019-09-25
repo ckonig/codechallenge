@@ -53,7 +53,7 @@ yarn install
 yarn run dev
 ```
 
-## Configure
+### Configure
 
 Open .env file and edit the settings at the bottom.
 
@@ -124,7 +124,7 @@ yarn run watch-poll
 
 Open <http://localhost:9987> to use Redis WebUI which gives access to data stored in queue and cache. Find the appropriate login data in laradock/.env file.
 
-Open <http://localhost:8080> to use phpmyadmin to access the dead letter queue. Find the appropriate login data in laradock/.env file. 
+Open <http://localhost:8080> to use phpmyadmin to access the dead letter queue. Find the appropriate login data in laradock/.env file.
 
 ### Monitor workers
 
@@ -151,7 +151,7 @@ The requirements state that the service should be horizontally scalable, which t
 - Laravel Horizon is used to run multiple queue workers inside one container. Horizon is started and supervised by the php-worker container, which can also be scaled up.
 - The web/api application is exposed through the traefik load balancer, which will delegate the requests to the nginx instances in a round-robin approach. In a production scenario, an external load balancing service for dynamic traffic and a CDN for static content would be preferrable.
 - If multiple instances of php-fpm are running, the balancing of the incoming traffic from nginx happens automatically.
-- The Laradock template I started with is based on using docker-compose. But this can only deploy the containers on one host and does not support swarm mode. To deploy this app in a cluster that spans multiple hosts, the .env file needs to be converted into something that the ```docker stack``` command can understand. 
+- The Laradock template I started with is based on using docker-compose. But this can only deploy the containers on one host and does not support swarm mode. To deploy this app in a cluster that spans multiple hosts, the .env file needs to be converted into something that the ```docker stack``` command can understand.
 - mySQL is used as data storage for the dead letter queue. Under high load, this single-instance database can become a bottleneck as well, and an external, more scalable solution would be more suitable.
 
 It's possible to scale up the application using docker-compose like this:
@@ -165,16 +165,16 @@ docker-compose up -d
 
 ## Possible Improvements
 
-It's clear that no piece of software is ever "100% done", unless we're talking about mathematically specified requirements. I've done my best to interpret the requirements and deliver a solution that "makes sense" in its context. Some things had to be deprioritized, as they would've taken too much time to implement, other things were not done because they weren't stated explicitly as requirements. 
+It's clear that no piece of software is ever "100% done", unless we're talking about mathematically specified requirements. I've done my best to interpret the requirements and deliver a solution that "makes sense" in its context. Some things had to be deprioritized, as they would've taken too much time to implement, other things were not done because they weren't stated explicitly as requirements.
 
 As a result, this application is by no means "ready for production", and here are some bullet points that would need to be picked up if the development would continue.
 
 - After sending an email, the UI should auto-refresh the status of the email. This would replace the "refresh" button. Potentially this can be implemented using the laravel broadcast feature.
 - The UI application could use URL routing to separate the different views from each other. This would make it easier to extend the UI later on.
 - Currently the secrets are stored in the repository, which should definitely not be the case in a production setup.
-- The application supports only one language, more work needs to be done before this can be used by people who don't speak english. 
-- The automated tests could use an actual test email account, and check if the email has arrived as a more complete end-to-end validation. If that's not the case, the test environment that automated tests run on probably should not actually send emails. 
-- The automated tests for the console application are rather minimalistic. It would be more useful if the console output would be read by the test program, so that a newly created email could be found back and the status transition from "queued" to "sent" could be asserted. 
+- The application supports only one language, more work needs to be done before this can be used by people who don't speak english.
+- The automated tests could use an actual test email account, and check if the email has arrived as a more complete end-to-end validation. If that's not the case, the test environment that automated tests run on probably should not actually send emails.
+- The automated tests for the console application are rather minimalistic. It would be more useful if the console output would be read by the test program, so that a newly created email could be found back and the status transition from "queued" to "sent" could be asserted.
 - The application has no UI tests yet, neither component based nor end-to-end. To reach a production-ready maturity of the application, UI tests are necessary. The [UI test plan](#ui-test-plan) indicates how those tests would look like.
 
 ## Choices and Revisions
@@ -210,7 +210,7 @@ The mySQL database is now only used as a dead letter queue.
 
 ### UI Test Plan
 
-I tried setting up unit tests for the UI components using Jest and I also tried setting up integration tests using Laravel Dusk, however the setups turned out to be much more tricky than expected and to make it work I would have to spend more time than reasonable. 
+I tried setting up unit tests for the UI components using Jest and I also tried setting up integration tests using Laravel Dusk, however the setups turned out to be much more tricky than expected and to make it work I would have to spend more time than reasonable.
 
 In a real-world situation I would search internal repositories for existing solutions and talk to colleagues to ask for help. In this artifical code-challenge situation I set myself a timeframe to not lose myself in endless research and experimentation. So at the end of the day, instead of actually writing the tests, I decided to write a test plan instead, which describes the kind of tests I would have written, had I managed to setup the UI test platform in time.
 
