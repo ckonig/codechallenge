@@ -169,9 +169,9 @@ It's clear that no piece of software is ever "100% done", unless we're talking a
 
 As a result, this application is by no means "ready for production", and here are some bullet points that would need to be picked up if the development would continue.
 
+- The application doesn't know the difference between different "failure" cases, when sending an email via an external service fails. Some failure cases might be retryable (e.g. 429 - Too many requests) while other failure cases require immediate attention (e.g. 403 - Forbidden). Failure cases can be described by the HTTP response codes, but also in the payload (e.g. there could be a limitation on the number of recipients). To implement a fine-grained failure handling, a thorough reading of the respective documentations is necessary.
 - After sending an email, the UI should auto-refresh the status of the email. This would replace the "refresh" button. Potentially this can be implemented using the laravel broadcast feature.
 - The UI application could use URL routing to separate the different views from each other. This would make it easier to extend the UI later on.
-- Currently the secrets are stored in the repository, which should definitely not be the case in a production setup.
 - The application supports only one language, more work needs to be done before this can be used by people who don't speak english.
 - The automated tests could use an actual test email account, and check if the email has arrived as a more complete end-to-end validation. If that's not the case, the test environment that automated tests run on probably should not actually send emails.
 - The automated tests for the console application are rather minimalistic. It would be more useful if the console output would be read by the test program, so that a newly created email could be found back and the status transition from "queued" to "sent" could be asserted.
